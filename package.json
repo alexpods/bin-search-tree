@@ -1,0 +1,25 @@
+{
+  "name": "bin-search-tree",
+  "version": "0.0.0",
+  "description": "Binary search tree",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alexpods/node-bin-search-tree.git"
+  },
+  "homepage": "https://github.com/alexpods/node-bin-search-tree",
+  "keywords": [
+    "binary search tree",
+    "data structure",
+    "tree",
+    "search",
+    "structure"
+  ],
+  "author": {
+    "name": "Aleksey Podskrebyshev (Alex Pods)",
+    "email": "aleksey.podskrebyshev@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexpods/node-bin-search-tree/issues"
+  }
+}
