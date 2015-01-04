@@ -2,48 +2,50 @@ module.exports = BinarySearchTree;
 
 function BinarySearchTree() {
     this._root   = null;
+    this._min    = null;
+    this._max    = null;
     this._length = 0;
 }
 
 Object.defineProperties(BinarySearchTree.prototype, {
 
     root: {
-        configurable: false,
-        enumerable:   false,
         get: function() {
             return this._root.v;
         }
     },
 
     rootKey: {
-        configurable: false,
-        enumerable:   false,
         get: function() {
             return this._root.k;
         }
     },
 
     min: {
-        configurable: false,
-        enumerable:   false,
         get: function() {
-            var min = this._getMinNode();
-            return min && min.v;
+            return this._min.v;
+        }
+    },
+
+    minKey: {
+        get: function() {
+            return this._min.k;
         }
     },
 
     max: {
-        configurable: false,
-        enumerable:   false,
         get: function() {
-            var max = this._getMaxNode();
-            return max && max.v;
+            return this._max.v;
+        }
+    },
+
+    maxKey: {
+        get: function() {
+            return this._max.k;
         }
     },
 
     length: {
-        configurable: false,
-        enumerable:   false,
         get: function() {
             return this._length;
         }
@@ -61,7 +63,7 @@ Object.defineProperties(BinarySearchTree.prototype, {
  */
 BinarySearchTree.prototype.set = function(key, value) {
     if (!this._root) {
-        this._root = { k: key, v: value, p: null, l: null, r: null };
+        this._root = this._min = this._max = { k: key, v: value, p: null, l: null, r: null, m: null };
         this._length++;
         return this;
     }
@@ -73,8 +75,17 @@ BinarySearchTree.prototype.set = function(key, value) {
         return this;
     }
 
-    this._linkNodes(result[1], { k: key, v: value, p: null, l: null, r: null });
+    var node = { k: key, v: value, p: null, l: null, r: null, m: null };
+
+    this._linkNodes(result[1], node);
     this._length++;
+
+    if (key < this._min.k) {
+        this._min = node;
+    }
+    else if (key > this._max.k) {
+        this._max = node;
+    }
 
     return this;
 };

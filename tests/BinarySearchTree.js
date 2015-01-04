@@ -57,10 +57,12 @@ describe('BinarySearchTree', function() {
 
     it('should gets value with minimal key of the tree', function() {
         expect(tree.min).to.be.equal(dict[1234]);
+        expect(tree.minKey).to.be.equal('1234');
     });
 
     it('should gets value with maximal key of the tree', function() {
         expect(tree.max).to.be.equal(dict['zz']);
+        expect(tree.maxKey).to.be.equal('zz');
     });
 
     it('should gets length of tree', function() {
