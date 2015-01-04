@@ -152,7 +152,7 @@ BinarySearchTree.prototype.remove = function(key) {
  *                      * searchResult - true if node was found
  *                      * node         - searched node if it was found, otherwise last checked node
  *
- * @private
+ * @protected
  */
 BinarySearchTree.prototype._search = function(key, root) {
     var nkey, node = root || this._root;
@@ -185,7 +185,7 @@ BinarySearchTree.prototype._search = function(key, root) {
  *
  * @param parent
  * @param child
- * @private
+ * @protected
  */
 BinarySearchTree.prototype._linkNodes = function(parent, child) {
     child.p  = parent;
@@ -197,7 +197,7 @@ BinarySearchTree.prototype._linkNodes = function(parent, child) {
 /**
  * Remove specified node
  * @param node
- * @private
+ * @protected
  */
 BinarySearchTree.prototype._removeNode = function(node) {
     var parent = node.p;
@@ -213,7 +213,7 @@ BinarySearchTree.prototype._removeNode = function(node) {
  * @param root Subtree root node
  * @returns Node with minimum key
  *
- * @private
+ * @protected
  */
 BinarySearchTree.prototype._getMinNode = function(root) {
     var node = root || this._root;
@@ -232,7 +232,7 @@ BinarySearchTree.prototype._getMinNode = function(root) {
  * @param   root Subtree root node
  * @returns Node with maximum key
  *
- * @private
+ * @protected
  */
 BinarySearchTree.prototype._getMaxNode = function(root) {
     var node = root || this._root;
