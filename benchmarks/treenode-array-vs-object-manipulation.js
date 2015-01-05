@@ -1,5 +1,13 @@
 var Benchmark = require('benchmark');
 
+function Node(k, v, p, l, r) {
+    this.k = k;
+    this.v = v;
+    this.p = p;
+    this.l = l;
+    this.r = r;
+}
+
 var array = {
     parent: ['some_key',    1234123412,         null, null, null],
     left:   ['left_child',  'asdfoasjdfpasdjf', null, null, null],
@@ -36,6 +44,12 @@ var objectS = {
     right:  { k:   'right child', v: 'qwerqwerqwerqwwq',  p: null, l:   null, r:  null }
 };
 
+var objectC = {
+    parent: new Node('some_key',    1234123412,         null, null, null),
+    left:   new Node('left_child',  'asdfoasjdfpasdjf', null, null, null),
+    right:  new Node('right_child', 'qwerqwerqwerqwwq', null, null, null)
+};
+
 new Benchmark.Suite()
     .add('Object node manipulation', function() {
         var temp      = object.parent;
@@ -57,7 +71,7 @@ new Benchmark.Suite()
         object.right.right  = null;
     })
     .add('Object node manipulation - small key', function() {
-        var temp      = objectS.parent;
+        var temp       = objectS.parent;
         objectS.parent = objectS.left;
         objectS.left   = objectS.right;
         objectS.right  = temp;
@@ -74,6 +88,25 @@ new Benchmark.Suite()
         objectS.right.p = objectS.parent;
         objectS.right.l   = null;
         objectS.right.r  = null;
+    })
+    .add('Class node manipulation', function() {
+        var temp       = objectC.parent;
+        objectC.parent = objectC.left;
+        objectC.left   = objectC.right;
+        objectC.right  = temp;
+
+        objectC.parent.p = null;
+        objectC.parent.l = objectC.left;
+        objectC.parent.r = objectC.right;
+
+
+        objectC.left.p   = objectC.parent;
+        objectC.left.l   = null;
+        objectC.left.r   = null;
+
+        objectC.right.p  = objectC.parent;
+        objectC.right.l  = null;
+        objectC.right.r  = null;
     })
     .add('Array node manipulation', function() {
         var temp        = array.parent;
@@ -97,6 +130,7 @@ new Benchmark.Suite()
         console.log(this[0].toString());
         console.log(this[1].toString());
         console.log(this[2].toString());
+        console.log(this[3].toString());
 
         console.log('Fastest is ' + this.filter('fastest').pluck('name'));
     })

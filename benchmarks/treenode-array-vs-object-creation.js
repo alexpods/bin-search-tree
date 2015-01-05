@@ -1,5 +1,13 @@
 var Benchmark = require('benchmark');
 
+function Node(k, v, p, l, r) {
+    this.key    = k;
+    this.value  = v;
+    this.parent = p;
+    this.left   = l;
+    this.right  = r;
+}
+
 new Benchmark.Suite()
     .add('Object node creation', function() {
         var parent = {
@@ -41,9 +49,20 @@ new Benchmark.Suite()
         left[2]   = parent;
         right[2]  = parent;
     })
+    .add('Class node creation', function() {
+        var parent = new Node('some_key',    1234123412,         null, null, null);
+        var left   = new Node('left_child',  'asdfoasjdfpasdjf', null, null, null);
+        var right  = new Node('right_child', 'qwerqwerqwerqwwq', null, null, null);
+
+        parent[3] = left;
+        parent[4] = right;
+        left[2]   = parent;
+        right[2]  = parent;
+    })
     .on('complete', function() {
         console.log(this[0].toString());
         console.log(this[1].toString());
+        console.log(this[2].toString());
 
         console.log('Fastest is ' + this.filter('fastest').pluck('name'));
     })
