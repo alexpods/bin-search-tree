@@ -75,5 +75,42 @@ describe('BinarySearchTree', function() {
         expect(tree.length).to.be.equal(6);
         tree.remove('key2');
         expect(tree.length).to.be.equal(5);
-    })
+    });
+
+    it('should have default node comparison logic', function() {
+        var tree = new BinarySearchTree();
+
+        expect(tree.compareKeys('a', 'b')).to.be.below(0);
+        expect(tree.compareKeys('b', 'a')).to.be.above(0);
+        expect(tree.compareKeys('z', 'a')).to.be.above(0);
+        expect(tree.compareKeys(1234, 'a')).to.be.below(0);
+        expect(tree.compareKeys(1234, '123435')).to.be.below(0);
+        expect(tree.compareKeys('123415', 1234)).to.be.above(0);
+        expect(tree.compareKeys(true, 'asdf')).to.be.below(0);
+        expect(tree.compareKeys(false, 'asdf')).to.be.below(0);
+        expect(tree.compareKeys('1234', true)).to.be.above(0);
+        expect(tree.compareKeys(false, '1234')).to.be.below(0);
+    });
+
+    it('should customize node comparison logic', function() {
+        var tree = new BinarySearchTree(function(key1, key2) {
+            return (key1[0] === 'k' && key2[0] !== 'k') ? -1 : (key1 < key2);
+        });
+
+        expect(tree.compareKeys('a1', 'b2')).to.be.below(0);
+        expect(tree.compareKeys('b2', 'a1')).to.be.above(0);
+        expect(tree.compareKeys('z',  'a')).to.be.above(0);
+        expect(tree.compareKeys('key1', 'a1')).to.be.below(0);
+
+        tree.set('a1',   3);
+        tree.set('b2',   2);
+        tree.set('z3',   5);
+        tree.set('key1', 1);
+        tree.set('key2', 2);
+        tree.set('key3', 3);
+        tree.set('key34',4);
+
+        expect(tree.minKey).to.be.equal('key1');
+        expect(tree.maxKey).to.be.equal('z3');
+    });
 });

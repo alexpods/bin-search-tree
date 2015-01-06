@@ -33,9 +33,9 @@ This will installl latest `bin-search-tree` package and add it to `dependencies`
 var BinarySearchTree = require('bin-search-tree');
 
 // Creation of binary search tree
-var tree = new BinarySearchTree(function(node1, node2) {
-    // Some node comparison logic. By default: node1.key - node2.key;
-    return node1.data - node2.data || node1.key - node2.key;
+var tree = new BinarySearchTree(function(key1, key2) {
+    // Some key comparison logic
+    return key1 < key2;
 });
 
 // Setting data

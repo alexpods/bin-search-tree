@@ -1,10 +1,19 @@
+"use strict";
+
 module.exports = BinarySearchTree;
 
-function BinarySearchTree() {
+function BinarySearchTree(options) {
+    options = options || {};
+
+    if (typeof options === 'function') {
+        options['compare'] = options;
+    }
+
     this._root   = null;
     this._min    = null;
     this._max    = null;
     this._length = 0;
+    this._cc     = options['compare'];
 }
 
 Object.defineProperties(BinarySearchTree.prototype, {
@@ -80,10 +89,10 @@ BinarySearchTree.prototype.set = function(key, value) {
     this._linkNodes(result[1], node);
     this._length++;
 
-    if (key < this._min.k) {
+    if (this.compareKeys(key, this._min.k) < 0) {
         this._min = node;
     }
-    else if (key > this._max.k) {
+    else if (this.compareKeys(key, this._max.k) > 0) {
         this._max = node;
     }
 
@@ -143,11 +152,37 @@ BinarySearchTree.prototype.remove = function(key) {
 };
 
 /**
+ * Comparison of two node keys
+ *
+ * @param k1
+ * @param k2 Second node
+ * @returns {Number} negative - if node1 "less then" node 2,
+ *                   positive - if node1 "greater then" node2
+ *                   0 - otherwise
+ *
+ * @protected
+ */
+BinarySearchTree.prototype.compareKeys = function(k1, k2) {
+    var cc  = this._cc;
+    var res = cc && cc(k1, k2);
+    var toString = Object.prototype.toString;
+
+    if (typeof res !== 'undefined') {
+        return toString.call(res) === '[object Number]' ? res : (res ? -1 : 1);
+    }
+
+    if (k1 === k2) {
+        return 0;
+    }
+    return k1 > k2 ? 1 : -1;
+};
+
+/**
  * Search node in subtree specified by its root.
  * If root does not specified than current tree root is taken
  *
- * @param key  Key of searched node
- * @param root Subtree root. By default current tree root is taken
+ * @param key   Key of searching node
+ * @param root  Subtree root. By default current tree root is taken
  * @returns {Array} Array [searchResult, node] where
  *                      * searchResult - true if node was found
  *                      * node         - searched node if it was found, otherwise last checked node
@@ -155,15 +190,14 @@ BinarySearchTree.prototype.remove = function(key) {
  * @protected
  */
 BinarySearchTree.prototype._search = function(key, root) {
-    var nkey, node = root || this._root;
+    var node = root || this._root, res;
 
     if (!node) {
         return [false, node];
     }
 
-    while (key !== (nkey = node.k)) {
-
-        if (key < nkey) {
+    while (res = this.compareKeys(key, node.k)) {
+        if (res < 0) {
             if (!node.l) {
                 return [false, node];
             }
@@ -177,7 +211,7 @@ BinarySearchTree.prototype._search = function(key, root) {
         }
     }
 
-    return [true, node]
+    return [true, node];
 };
 
 /**
@@ -185,25 +219,37 @@ BinarySearchTree.prototype._search = function(key, root) {
  *
  * @param parent
  * @param child
+ *
  * @protected
  */
 BinarySearchTree.prototype._linkNodes = function(parent, child) {
     child.p  = parent;
-    child.k < parent.k
-        ? parent.l = child
-        : parent.r = child;
+
+    var res = this.compareKeys(child.k, parent.k);
+
+    if (res === 0) {
+        throw new Error('Could not link parent and child nodes with equal keys!');
+    }
+
+    res < 0 ? parent.l = child : parent.r = child;
 };
 
 /**
  * Remove specified node
+ *
  * @param node
+ *
  * @protected
  */
 BinarySearchTree.prototype._removeNode = function(node) {
     var parent = node.p;
-    node.k < parent.k
-        ? parent.l = null
-        : parent.r = null;
+
+    if (parent.l === node) {
+        parent.l = null;
+    }
+    if (parent.r === node) {
+        parent.r = null;
+    }
 };
 
 /**
