@@ -113,4 +113,102 @@ describe('BinarySearchTree', function() {
         expect(tree.minKey).to.be.equal('key1');
         expect(tree.maxKey).to.be.equal('z3');
     });
+
+    it('should have array-like .forEach() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        tree.forEach(function(value, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(traversingTree).to.be.equal(tree);
+            expect(value).to.be.equal(dict[key]);
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+    });
+
+    it('should have array-like .every() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var result = tree.every(function(value, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(value).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return value !== 0;
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+        expect(result).to.be.equal(true);
+
+        expect(tree.every(function(value, key) {
+            return key !== 'key1';
+        })).to.be.equal(false);
+    });
+
+    it('should have array-like .some() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var result = tree.some(function(value, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(value).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return value === 0;
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+        expect(result).to.be.equal(false);
+
+        expect(tree.some(function(value, key) {
+            return key === 'key1';
+        })).to.be.equal(true);
+    });
+
+    it('should have array-like .reduce() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var result = tree.reduce(function(previousValue, currentValue, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(currentValue).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return previousValue + ',' + currentValue;
+        }, '__here__');
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+
+        var dictResult = '__here__';
+        for (var key in dict) {
+            dictResult += ',' + dict[key];
+        }
+
+        var resultValues = result.split(',');
+        var dictValues   = dictResult.split(',');
+
+        resultValues.sort();
+        dictValues.sort();
+
+        expect(resultValues).to.be.deep.equal(dictValues);
+    });
+
 });

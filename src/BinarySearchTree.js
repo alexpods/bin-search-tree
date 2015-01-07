@@ -152,6 +152,149 @@ BinarySearchTree.prototype.remove = function(key) {
 };
 
 /**
+ * Array-like .forEach() method.
+ * Just wrapper around .traverse() method.
+ *
+ * @param callback Function that is executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * value The value of current element being processed in tree.
+ *                    * key   The key of current element being processed in tree.
+ *                    * three The binary search tree forEach was called upon.
+ */
+BinarySearchTree.prototype.forEach = function(callback) {
+    var tree = this;
+
+    return this.traverse(function(node) {
+        callback(node.v, node.k, tree);
+    });
+};
+
+/**
+ * Array-like .every() method.
+ * Just wrapper around .traverse() method.
+ *
+ * @param callback Function that is executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * value The value of current element being processed in tree.
+ *                    * key   The key of current element being processed in tree.
+ *                    * three The binary search tree forEach was called upon.
+ */
+BinarySearchTree.prototype.every = function(callback) {
+    var tree = this;
+    var res  = true;
+
+    this.traverse(function(node) {
+        if (!callback(node.v, node.k, tree)) {
+            res  = false;
+            return 'break';
+        }
+    });
+
+    return res;
+};
+
+
+/**
+ * Array-like .some() method.
+ * Just wrapper around .traverse() method.
+ *
+ * @param callback Function that is executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * value The value of current element being processed in tree.
+ *                    * key   The key of current element being processed in tree.
+ *                    * three The binary search tree forEach was called upon.
+ */
+BinarySearchTree.prototype.some = function(callback) {
+    var tree = this;
+    var res  = false;
+
+    this.traverse(function(node) {
+        if (callback(node.v, node.k, tree)) {
+            res  = true;
+            return 'break';
+        }
+    });
+
+    return res;
+};
+
+/**
+ * Array-like .reduce() method.
+ * Just wrapper around .traverse() method.
+ *
+ * @param callback Function that is executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * previousValue The value previously returned in the last invocation of the callback,
+ *                                    or initialValue, if supplied
+ *                    * currentValue  The value of current element being processed in tree.
+ *                    * key           The key of current element being processed in tree.
+ *                    * three          The binary search tree forEach was called upon.
+ *
+ * @param [initialValue] Object to use as the first argument to the first call of the callback.
+ *
+ * @returns Value return by last callback invocation.
+ */
+BinarySearchTree.prototype.reduce = function(callback, initialValue) {
+    var tree = this;
+    var res  = initialValue;
+
+    this.traverse(function(node) {
+        res = callback(res, node.v, node.k, tree);
+    });
+
+    return res;
+};
+
+BinarySearchTree.prototype.traverse = function(callback, ro) {
+    ro = ro || false; // Reverse Order of traversing
+
+    var node  = this._root;
+
+    var up    = false; // traversing is in UP state
+    var im    = false; // traversing is In the Middle state
+
+
+    while (node) {
+        if (!up) {
+            if ('break' === callback(node)) {
+                return;
+            }
+        }
+
+        if (!up && (ro ? node.r : node.l)) {
+            up   = false;
+            im   = false;
+            node = ro ? node.r : node.l;
+            continue;
+        }
+        if (!up && (ro ? node.l : node.r)) {
+            up   = false;
+            im   = false;
+            node = ro ? node.l : node.r;
+            continue;
+        }
+
+        if (up && im && ro && node.l) {
+            up  = false;
+            im  = false;
+            node = node.l;
+            continue;
+        }
+
+        if (up && im && !ro && node.r) {
+            up  = false;
+            im  = false;
+            node = node.r;
+            continue;
+        }
+
+        up   = true;
+        im   = node.p && (node === (ro ? node.p.r : node.p.l ));
+        node = node.p;
+    }
+};
+
+/**
  * Comparison of two node keys
  *
  * @param k1
