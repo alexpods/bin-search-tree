@@ -114,6 +114,14 @@ describe('BinarySearchTree', function() {
         expect(tree.maxKey).to.be.equal('z3');
     });
 
+    it('should clone tree (not deeply)', function() {
+        var newTree = tree.clone();
+
+        expect(newTree).to.be.instanceof(tree.constructor);
+        expect(newTree.length).to.be.equal(0);
+        expect(newTree._cc).to.be.equal(tree._cc);
+    });
+
     it('should have array-like .forEach() method', function() {
         var dictKeys    = Object.keys(dict);
         var visitedKeys = [];
@@ -209,6 +217,40 @@ describe('BinarySearchTree', function() {
         dictValues.sort();
 
         expect(resultValues).to.be.deep.equal(dictValues);
+    });
+
+    it('should have array-like .reduceRight() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var resultRight = tree.reduceRight(function(previousValue, currentValue, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(currentValue).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return typeof previousValue === 'undefined' ? currentValue : previousValue + ',' + currentValue;
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+
+        var result = tree.reduce(function(previousValue, currentValue, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(currentValue).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return typeof previousValue === 'undefined' ? currentValue : previousValue + ',' + currentValue;
+        });
+
+        var resultRightValues = resultRight.split(',');
+        var resultValues      = result.split(',');
+
+        expect(resultRightValues).to.be.deep.equal(resultValues.reverse());
+
     });
 
 });
