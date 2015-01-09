@@ -145,7 +145,12 @@ BinarySearchTree.prototype.remove = function(key) {
     }
     var node = result[1];
 
-    this._removeNode(node);
+    if (node === this._root) {
+        this._root = this._removeNode(node);
+    }
+    else {
+        this._removeNode(node);
+    }
     this._length--;
 
     return node.v;
@@ -166,7 +171,7 @@ BinarySearchTree.prototype.clone = function() {
 
 /**
  * Array-like .forEach() method.
- * Wrapper around .traverse() method.
+ * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -177,14 +182,14 @@ BinarySearchTree.prototype.clone = function() {
 BinarySearchTree.prototype.forEach = function(callback) {
     var tree = this;
 
-    return this.traverse(function(node) {
+    return this._traverse(function(node) {
         callback(node.v, node.k, tree);
     });
 };
 
 /**
  * Array-like .every() method.
- * Wrapper around .traverse() method.
+ * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -196,7 +201,7 @@ BinarySearchTree.prototype.every = function(callback) {
     var tree = this;
     var res  = true;
 
-    this.traverse(function(node) {
+    this._traverse(function(node) {
         if (!callback(node.v, node.k, tree)) {
             res  = false;
             return 'break';
@@ -209,7 +214,7 @@ BinarySearchTree.prototype.every = function(callback) {
 
 /**
  * Array-like .some() method.
- * Wrapper around .traverse() method.
+ * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -221,7 +226,7 @@ BinarySearchTree.prototype.some = function(callback) {
     var tree = this;
     var res  = false;
 
-    this.traverse(function(node) {
+    this._traverse(function(node) {
         if (callback(node.v, node.k, tree)) {
             res  = true;
             return 'break';
@@ -233,7 +238,7 @@ BinarySearchTree.prototype.some = function(callback) {
 
 /**
  * Array-like .reduce() method.
- * Wrapper around .traverse() method.
+ * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -251,7 +256,7 @@ BinarySearchTree.prototype.reduce = function(callback, initialValue) {
     var tree = this;
     var res  = initialValue;
 
-    this.traverse(function(node) {
+    this._traverse(function(node) {
         res = callback(res, node.v, node.k, tree);
     });
 
@@ -260,9 +265,9 @@ BinarySearchTree.prototype.reduce = function(callback, initialValue) {
 
 /**
  * Array-like .reduceRight() method.
- * Wrapper around .traverse() method.
+ * Wrapper around ._traverse() method.
  *
- * @param callback Function that is executed once per each element of binary search tree.
+ * @param callback Function that will be executed once per each element of binary search tree.
  *                 Function has three arguments:
  *                    * previousValue The value previously returned in the last invocation of the callback,
  *                                    or initialValue, if supplied
@@ -278,22 +283,182 @@ BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
     var tree = this;
     var res  = initialValue;
 
-    this.traverse(function(node) {
+    this._traverse(function(node) {
         res = callback(res, node.v, node.k, tree);
     }, true);
 
     return res;
 };
 
-BinarySearchTree.prototype.traverse = function(callback, ro) {
+/**
+ * Array-like .map() method.
+ * Wrapper around ._traverse() method.
+ *
+ * @param callback Function that will be executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * value   The value of current element being processed in tree.
+ *                    * key     he key of current element being processed in tree.
+ *                    * three   The binary search tree forEach was called upon.
+ *
+ * @returns {BinarySearchTree} New tree with results of provided function on every element of original tree.
+ */
+BinarySearchTree.prototype.map = function(callback) {
+    var tree = this;
+
+    return this._produce(function(node) {
+        return { k: node.k, v: callback(node.v, node.k, tree), p: null, l: null, r: null, m: null };
+    });
+};
+
+/**
+ * Array-like .filter() method.
+ * Wrapper around ._traverse() method.
+ *
+ * @param callback Function that will be executed once per each element of binary search tree.
+ *                 Function has three arguments:
+ *                    * value   The value of current element being processed in tree.
+ *                    * key     he key of current element being processed in tree.
+ *                    * three   The binary search tree forEach was called upon.
+ *
+ * @returns {BinarySearchTree} New tree with elements filtered by provided function.
+ */
+BinarySearchTree.prototype.filter = function(callback) {
+    var tree    = this;
+    var removed = [];
+
+    var newTree = this._produce(function(node) {
+        var key  = node.k;
+        var val  = node.v;
+        var newn = { k: key, v: val, p: null, l: null, r: null, m: null };
+
+        if (!callback(val, key, tree)) {
+            removed.push(newn);
+        }
+
+        return newn;
+    });
+
+    var len = newTree._length;
+
+    for (var i = 0, ii = removed.length; i < ii; ++i) {
+        var rem = removed[i];
+
+        if (newTree._root === rem) {
+            newTree._root = newTree._removeNode(rem);
+        }
+        else {
+            newTree._removeNode(rem);
+        }
+        --len;
+    }
+    newTree._length = len;
+
+    return newTree;
+};
+
+BinarySearchTree.prototype._produce = function(callback) {
+    var tree = this;
+    var root = null;
+    var last = null;
+    var ldir = '';
+    var stack = [];
+    var ndirs = [];
+    var length = 0;
+
+    this._traverse(function(node, dirs) {
+        ++length;
+
+        var newn  = callback(node);
+
+        if (!root && !node.p) {
+            root = newn;
+        }
+
+        var ii = dirs.length - 1;
+
+        for (var i = 0; i < ii; ++i) {
+            var dir  = dirs[i];
+            var ld   = ldir[ldir.length - 1];
+
+            if (('L' === dir && 'l' === ld) || ('R' === dir && 'r' === ld)) {
+                ldir = ldir.slice(0, -1);
+            }
+
+            if ('L' === dir || 'R' === dir) {
+                last = last.p;
+            }
+
+            if (('l' === dir || 'r' === dir) && !last[dir]) {
+                stack.push(last);
+                last = newn;
+                ldir = dirs.slice(i);
+                return;
+            }
+        }
+
+        switch (dirs[ii]) {
+
+            case 'L':
+                if ('l' === ldir[ldir.length - 1]) {
+                    ldir = ldir.slice(0, -1);
+                }
+                if (1 === ldir.length) {
+                    tree._linkNodes(stack.pop(), newn, ldir);
+                    ldir = ndirs.length ? ndirs.pop() : '';
+                }
+                tree._linkNodes(newn, last, 'l');
+                break;
+
+            case 'R':
+                if ('r' === ldir[ldir.length - 1]) {
+                    ldir = ldir.slice(0, -1);
+                }
+                if (1 === ldir.length) {
+                    tree._linkNodes(stack.pop(), newn, ldir);
+                    ldir = ndirs.length ? ndirs.pop() : '';
+                }
+                tree._linkNodes(newn, last, 'r');
+                break;
+
+            case 'l':
+                if (stack.length) {
+                    ldir += 'l';
+                }
+                tree._linkNodes(last, newn, 'l');
+                break;
+
+            case 'r':
+                if (stack.length) {
+                    ldir += 'r';
+                }
+                tree._linkNodes(last, newn, 'r');
+                break;
+        }
+
+        last = newn;
+    });
+
+    if (!root) {
+        throw new Error('Could not map tree: root node was not found!');
+    }
+
+    tree = tree.clone();
+    tree._root   = root;
+    tree._length = length;
+
+    return tree;
+};
+
+BinarySearchTree.prototype._traverse = function(callback, ro) {
     var p;
 
     ro = ro || false; // Reverse Order of traversing
 
-    var node  = this._root;
+    var node = this._root;
+    var dirs = '';
 
-    var up    = false; // traversing is in UP state
-    var im    = false; // traversing is In the Middle state
+    var up = false; // traversing is in UP state
+    var im = false; // traversing is In the Middle state
 
 
     while (node) {
@@ -302,33 +467,54 @@ BinarySearchTree.prototype.traverse = function(callback, ro) {
             // pre
 
             if (ro ? node.r : node.l) {
+                if (ro) {
+                    node = node.r;
+                    if (dirs !== null) {
+                        dirs += 'r';
+                    }
+                }
+                else {
+                    node = node.l;
+                    if (dirs !== null) {
+                        dirs += 'l';
+                    }
+                }
                 up   = false;
                 im   = false;
-                node = ro ? node.r : node.l;
                 continue;
             }
         }
 
         if (!up || im) {
-            if ('break' === callback(node)) {
+            if ('break' === callback(node, dirs)) {
                 return;
             }
+            dirs = '';
 
             if (ro ? node.l : node.r) {
+                if (ro) {
+                    node = node.l;
+                    dirs += 'l';
+                }
+                else {
+                    node = node.r;
+                    dirs += 'r';
+                }
                 up   = false;
                 im   = false;
-                node = ro ? node.l : node.r;
                 continue;
             }
         }
 
         // post
 
-
         up   = true;
         p    = node.p;
         im   = p && (node === (ro ? p.r : p.l ));
         node = p;
+        if (null !== dirs) {
+            dirs += ro ? 'R' : 'L';
+        }
     }
 };
 
@@ -398,10 +584,11 @@ BinarySearchTree.prototype._search = function(key, root) {
  *
  * @param parent
  * @param child
+ * @param [type]
  *
  * @protected
  */
-BinarySearchTree.prototype._linkNodes = function(parent, child) {
+BinarySearchTree.prototype._linkNodes = function(parent, child, type) {
     child.p  = parent;
 
     var res = this.compareKeys(child.k, parent.k);
@@ -410,7 +597,19 @@ BinarySearchTree.prototype._linkNodes = function(parent, child) {
         throw new Error('Could not link parent and child nodes with equal keys!');
     }
 
-    res < 0 ? parent.l = child : parent.r = child;
+    if (typeof type !== 'undefined') {
+        switch (type) {
+            case 'l':
+            case 'left':  parent.l = child; break;
+            case 'r':
+            case 'right': parent.r = child; break;
+            default:
+                throw new Error('Incorrect link nodes type!');
+        }
+    }
+    else {
+        res < 0 ? parent.l = child : parent.r = child;
+    }
 };
 
 /**
@@ -422,13 +621,60 @@ BinarySearchTree.prototype._linkNodes = function(parent, child) {
  */
 BinarySearchTree.prototype._removeNode = function(node) {
     var parent = node.p;
+    var right  = node.l;
+    var left   = node.r;
 
-    if (parent.l === node) {
-        parent.l = null;
+    var plType = parent && (parent.l === node ? 'left' : 'right'); // parent link type
+
+    if (!left && !right) {
+        if (parent) {
+            plType === 'left' ? parent.l = null : parent.r = null;
+            node.p = null;
+        }
+        return parent;
     }
-    if (parent.r === node) {
-        parent.r = null;
+
+
+    if (!left) {
+        if (parent) {
+            this._linkNodes(parent, right, plType);
+            node.p = null;
+        }
+        else {
+            right.p = null;
+        }
+        node.r = null;
+
+        return parent || right;
     }
+
+    if (!right) {
+        if (parent) {
+            this._linkNodes(parent, left, plType);
+            node.p = null;
+        }
+        else {
+            left.p = null;
+        }
+        node.l = null;
+
+        return parent || left;
+    }
+
+    this._linkNodes(this._getMaxNode(left), right, 'right');
+
+    if (parent) {
+        this._linkNodes(parent, left, plType);
+        node.p = null;
+    }
+    else {
+        left.p = null;
+    }
+
+    node.l = null;
+    node.r = null;
+
+    return parent || left;
 };
 
 /**

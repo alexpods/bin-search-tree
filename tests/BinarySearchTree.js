@@ -46,9 +46,14 @@ describe('BinarySearchTree', function() {
     });
 
     it('should remove value by its key', function() {
-        expect(tree.has('key2')).to.be.true;
+        expect(tree.has('key2')).to.be.equal(true);
         expect(tree.remove('key2')).to.be.equal(dict['key2']);
-        expect(tree.has('key2')).to.be.false;
+        var length = 0;
+        for (var prop in dict) {
+            length++;
+            expect(tree.has(prop)).to.be.equal(prop !== 'key2');
+        }
+        expect(tree.length).to.be.equal(length-1);
     });
 
     it('should throw an error if value does not exist for specified key', function() {
@@ -251,6 +256,82 @@ describe('BinarySearchTree', function() {
 
         expect(resultRightValues).to.be.deep.equal(resultValues.reverse());
 
+    });
+
+    it('should have array-like .map() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var newTree = tree.map(function(value, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(value).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return value + '-mapped-value';
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+
+        expect(newTree).not.to.be.equal(tree);
+        expect(newTree._root).not.to.be.equal(tree._root);
+        expect(newTree.length).to.be.equal(tree.length);
+        expect(newTree.root).to.be.equal(tree.root +  '-mapped-value');
+
+        dictKeys.forEach(function(key) {
+            expect(newTree.get(key)).to.be.equal(dict[key] + '-mapped-value');
+        });
+
+        expect(newTree.length).to.be.equal(dictKeys.length);
+
+        var oldVal = tree.reduce(function(prev, val, key) {
+            return prev + val + '-mapped-value' + key;
+        }, '');
+
+        var newVal = newTree.reduce(function(prev, val, key) {
+            return prev + val + key;
+        }, '');
+
+        expect(newVal).to.be.equal(oldVal);
+    });
+
+    it('should have array-like .filter() method', function() {
+        var dictKeys    = Object.keys(dict);
+        var visitedKeys = [];
+
+        var newTree = tree.filter(function(value, key, traversingTree) {
+            visitedKeys.push(key);
+
+            expect(value).to.be.equal(dict[key]);
+            expect(traversingTree).to.be.equal(tree);
+
+            return key[0] === 'k';
+        });
+
+        dictKeys.sort();
+        visitedKeys.sort();
+
+        expect(visitedKeys).to.be.deep.equal(dictKeys);
+
+        expect(newTree).not.to.be.equal(tree);
+        expect(newTree.length).to.be.equal(2);
+
+        var newKeyValues = newTree.reduce(function(prev, val, key) {
+            return prev + key + val;
+        }, '');
+
+        var dictKeyValues = '';
+        for (var key in dict) {
+            if (key[0] !== 'k') {
+                continue;
+            }
+            dictKeyValues += key + dict[key];
+        }
+
+        expect(newKeyValues).to.be.equal(dictKeyValues);
     });
 
 });
