@@ -356,6 +356,13 @@ BinarySearchTree.prototype.filter = function(callback) {
     return newTree;
 };
 
+/**
+ * @TODO: Refactor logic with dirs
+ *
+ * @param callback
+ * @returns {BinarySearchTree}
+ * @private
+ */
 BinarySearchTree.prototype._produce = function(callback) {
     var tree = this;
     var root = null;
@@ -376,6 +383,11 @@ BinarySearchTree.prototype._produce = function(callback) {
 
         var ii = dirs.length - 1;
 
+        if (!last) {
+            last = newn;
+            return;
+        }
+
         for (var i = 0; i < ii; ++i) {
             var dir  = dirs[i];
             var ld   = ldir[ldir.length - 1];
@@ -385,14 +397,31 @@ BinarySearchTree.prototype._produce = function(callback) {
             }
 
             if ('L' === dir || 'R' === dir) {
+                if (!last.p) {
+                    stack.push(last);
+                    last = newn;
+                    if (ldir) {
+                        ndirs.push(ldir);
+                    }
+                    ldir = dirs.slice(i);
+                    return;
+                }
                 last = last.p;
+                continue;
             }
 
-            if (('l' === dir || 'r' === dir) && !last[dir]) {
-                stack.push(last);
-                last = newn;
-                ldir = dirs.slice(i);
-                return;
+            if ('l' === dir || 'r' === dir) {
+                if (!last[dir]) {
+                    stack.push(last);
+                    last = newn;
+                    if (ldir) {
+                        ndirs.push(ldir);
+                    }
+                    ldir = dirs.slice(i);
+                    return;
+                }
+                last = last[dir];
+                continue;
             }
         }
 
@@ -403,7 +432,10 @@ BinarySearchTree.prototype._produce = function(callback) {
                     ldir = ldir.slice(0, -1);
                 }
                 if (1 === ldir.length) {
-                    tree._linkNodes(stack.pop(), newn, ldir);
+                    ('L' === ldir || 'R' === ldir)
+                        ? tree._linkNodes(newn, stack.pop(), ldir)
+                        : tree._linkNodes(stack.pop(), newn, ldir);
+
                     ldir = ndirs.length ? ndirs.pop() : '';
                 }
                 tree._linkNodes(newn, last, 'l');
@@ -414,7 +446,10 @@ BinarySearchTree.prototype._produce = function(callback) {
                     ldir = ldir.slice(0, -1);
                 }
                 if (1 === ldir.length) {
-                    tree._linkNodes(stack.pop(), newn, ldir);
+                    ('L' === ldir || 'R' === ldir)
+                        ? tree._linkNodes(newn, stack.pop(), ldir)
+                        : tree._linkNodes(stack.pop(), newn, ldir);
+
                     ldir = ndirs.length ? ndirs.pop() : '';
                 }
                 tree._linkNodes(newn, last, 'r');
@@ -511,10 +546,10 @@ BinarySearchTree.prototype._traverse = function(callback, ro) {
         up   = true;
         p    = node.p;
         im   = p && (node === (ro ? p.r : p.l ));
-        node = p;
-        if (null !== dirs) {
-            dirs += ro ? 'R' : 'L';
+        if (p) {
+            dirs += node === p.r  ? 'R' : 'L';
         }
+        node = p;
     }
 };
 
@@ -598,7 +633,7 @@ BinarySearchTree.prototype._linkNodes = function(parent, child, type) {
     }
 
     if (typeof type !== 'undefined') {
-        switch (type) {
+        switch (type.toLowerCase()) {
             case 'l':
             case 'left':  parent.l = child; break;
             case 'r':
@@ -714,3 +749,31 @@ BinarySearchTree.prototype._getMaxNode = function(root) {
 
     return node;
 };
+
+    var o={};
+    var children = ['b' /* some known properties of o */]
+
+    children.forEach(function(child) {
+        var childValue = {};
+        Object.defineProperty(o, 'b', {
+            get: function() { return childValue; },
+            set: function(newValue) {
+                func();
+
+                Object.keys(newValue).forEach(function(key) {
+                    var value = newValue[key];
+                    Object.defineProperty(childValue, key, {
+                        get: function() { return value },
+                        set: function(newValue) {
+                            func();
+                            value = newValue;
+                        }
+                    })
+                });
+            }
+        });
+    });
+    function func()
+    {
+        console.log(o)
+    }
