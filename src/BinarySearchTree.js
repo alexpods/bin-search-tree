@@ -170,7 +170,7 @@ BinarySearchTree.prototype.clone = function() {
 };
 
 /**
- * Array-like .forEach() method.
+ * Functional .forEach() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
@@ -188,7 +188,7 @@ BinarySearchTree.prototype.forEach = function(callback) {
 };
 
 /**
- * Array-like .every() method.
+ * Functional .every() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
@@ -213,7 +213,7 @@ BinarySearchTree.prototype.every = function(callback) {
 
 
 /**
- * Array-like .some() method.
+ * Functional .some() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
@@ -237,7 +237,7 @@ BinarySearchTree.prototype.some = function(callback) {
 };
 
 /**
- * Array-like .reduce() method.
+ * Funtional .reduce() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
@@ -264,7 +264,7 @@ BinarySearchTree.prototype.reduce = function(callback, initialValue) {
 };
 
 /**
- * Array-like .reduceRight() method.
+ * Funtioanl .reduceRight() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that will be executed once per each element of binary search tree.
@@ -291,7 +291,7 @@ BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
 };
 
 /**
- * Array-like .map() method.
+ * Functional .map() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that will be executed once per each element of binary search tree.
@@ -311,7 +311,7 @@ BinarySearchTree.prototype.map = function(callback) {
 };
 
 /**
- * Array-like .filter() method.
+ * Funtional .filter() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that will be executed once per each element of binary search tree.
