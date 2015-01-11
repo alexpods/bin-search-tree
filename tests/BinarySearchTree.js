@@ -1,27 +1,6 @@
 var BinarySearchTree = require('../src/BinarySearchTree');
 var expect           = require('chai').expect;
 
-var randoms = [ 0.2559150531888008,
-    0.2468814100138843,
-    0.16246567014604807,
-    0.706395972520113,
-    0.9167278336826712,
-    0.3763683559373021,
-    0.44593309448100626,
-    0.45321546238847077,
-    0.47158337687142193,
-    0.17752221506088972,
-    0.9681885722093284,
-    0.7017606699373573,
-    0.37893244437873363,
-    0.22839480778202415,
-    0.5410827968735248,
-    0.15748729393817484,
-    0.8918526519555598,
-    0.7404430937021971,
-    0.17610181751661003,
-    0.11254097195342183 ];
-
 describe('BinarySearchTree', function() {
     var tree;
     var dict = { key1: 'value 1', 1234: 5678, key2: 1234, 5678: 'value2', zz: 'hello', a: 'something else' };
@@ -356,19 +335,22 @@ describe('BinarySearchTree', function() {
     });
 
     it('should .map() large random trees', function() {
-        var i, randKey, randVal;
+        var i, randKey;
         var randArray = [];
         var randTree  = new BinarySearchTree();
 
-        for (i = 0; i < 1000; ++i) {
-            randKey = Math.random();
-            randVal = Math.random();
+        for (i = 0; i < 10000; ++i) {
+            randKey = Math.floor(Math.random()*10000);
+
+            if (randTree.has(randKey)) {
+                continue;
+            }
 
             randArray.push(randKey);
-            randTree.set(randKey, randVal);
+            randTree.set(randKey, randKey);
         }
 
-        randArray.sort();
+        randArray.sort(function(v1, v2) { return v1 - v2 });
 
         i = 0;
         randTree.forEach(function(val, key) {
@@ -377,8 +359,6 @@ describe('BinarySearchTree', function() {
 
         expect(randTree.length).to.be.equal(randArray.length);
 
-
-        debugger;
         var newRandTree = randTree.map(function(val, key) { return val });
         var realLength = 0;
         newRandTree.forEach(function() { realLength++ });
