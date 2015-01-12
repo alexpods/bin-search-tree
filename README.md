@@ -64,7 +64,13 @@ catch (error) {
 
 #API#
 
-- [Functional methods](#functional-methods)
+- [Common (Map methods)](#common-map-methods) 
+    - [.get()](#get)
+    - [.set()](#set)
+    - [.has()](#has)
+    - [.delete()](#delete)
+
+- [Functional (Array methods)](#functional-array-methods)
     - [.forEach()](#foreach)
     - [.every()](#every)
     - [.some()](#some)
@@ -73,8 +79,84 @@ catch (error) {
     - [.map()](#map)
     - [.filter()](#filter)
 
+##Common (Map methods)##
 
-##Functional methods##
+###.get()###
+
+Gets the value by provided key
+
+```js
+var value = tree.get(key);
+```
+
+- `key`: The key of the value to get from tree.
+
+**Returns** searched value, or `undefined` if value does not exists for specified key.
+
+```js
+var v1 = tree.get('some_key');
+var v2 = tree.get(14123);
+var v3 = tree.get(someobject);
+```
+
+
+###.set()###
+
+Sets the value for the key into the tree.
+
+```js
+var tree = tree.set(key, value);
+```
+
+- `key`: The key of the node to add to the tree.
+- `value`: The value of the node to add to the tree.
+
+**Returns** the tree for chaining purpose.
+
+```js
+tree.set(325, 'hello').set(80.34, 'goodby').set('key3', 'here again');
+```
+
+
+###.has()###
+
+Checks whether value exists for specified key.
+
+```js
+var isExists = tree.has(key);
+```
+
+- `key`: The key of the value to test for presence.
+
+**Returns** `true` is value exists, `false` - otherwise.
+
+```js
+var isZeroExists = tree.has(0);
+var isCatExists  = tree.has('cat');
+var isBoobsExists = tree.has('boobs');
+```
+
+
+###.delete()###
+
+Deletes value specified by key from the tree.
+
+```js
+var wasDeleted = tree.delete(key);
+```
+
+- `key`: The key of the value to delete from the tree.
+
+**Returns** `true` - if value was successfully deleted from the tree, `false` - if value does not exists for specified key.
+
+```js
+var numberKeyWasDeleted = tree.delete(1234);
+var stringKeyWasDeleted = tree.delete('some_string');
+```
+
+
+
+##Functional (Array methods)##
 
 ###.forEach()###
 
@@ -86,10 +168,10 @@ You will be able to change direction in the future versions of the library.
 tree.forEach(callback);
 ```
 
-- **callback**: Function to execute once per each node of the tree. It has following arguments:
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
+- `callback`: Function to execute once per each node of the tree. It has following arguments:
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
 
 ```js
 tree.forEach(function(value, key, tree) {
