@@ -65,11 +65,11 @@ catch (error) {
 #API#
 
 - [Functional methods](#functional-methods)
-    - [.forEach()](#forEach)
+    - [.forEach()](#foreach)
     - [.every()](#every)
     - [.some()](#some)
     - [.reduce()](#reduce)
-    - [.reduceRight()](#reduceRight)
+    - [.reduceRight()](#reduceright)
     - [.map()](#map)
     - [.filter()](#filter)
 
@@ -78,15 +78,15 @@ catch (error) {
 
 ###.forEach()###
 
-Executes provieded function once per each node of the three.
-Direction of tree traversion: from min key to max key.
+Executes provieded function once per each node of the tree.
+Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
 tree.forEach(callback);
 ```
 
-- **callback**: Function executed once per each node of the tree. It has following arguments:
+- **callback**: Function to execute once per each node of the tree. It has following arguments:
     - *value*: Value of the current node.
     - *key*:   Key of the current node.
     - *tree*:  Tree is being processed.
@@ -101,8 +101,8 @@ tree.forEach(function(value, key, tree) {
 ###.every()###
 
 Tests whether all nodes of the tree pass the test implemented by the provided function.
-Tree traversing is stopped on first node that failes the test.
-Direction of tree traversion: from min key to max key.
+Tree traversion is stopped on the first node that failes the test.
+Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
@@ -125,9 +125,9 @@ var isAllPositiver = tree.every(function(value, key, tree) {
 
 ###.some()###
 
-Tests whether some nodes of the tree pass the test implemented by the provided function.
-Tree traversing is stopped on first node that passes the test.
-Direction of tree traversion: from min key to max key.
+Tests whether at least one of the tree nodes pass the test implemented by the provided function.
+Tree traversion is stopped on the first node that passes the test.
+Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
@@ -150,14 +150,14 @@ var hasZero = tree.some(function(value, key, tree) {
 ###.reduce()###
 
 Applies provided function against accumulator and each node of the tree.
-Direction of tree traversion: from min key to max key.
+Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
 var result = test.reduce(callback [, initialValue]);
 ```
 
-- **callback**: Function executed on each node ot the tre. Returns new value of accumulator for the next node. It has following arguments:
+- **callback**: Function executed on each node ot the tree. Returns new accumulator value for the next invokation. It has following arguments:
     - *accumulator*: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
     - *value*: Value of the current node.
     - *key*:   Key of the current node.
@@ -175,14 +175,14 @@ var sum = tree.reduce(function(accumulator, value, key, tree) {
 ###.reduceRight()###
 
 Applies provided function against accumulator and each node of the tree.
-Direction of tree traversion: from max key to max min.
+Direction of tree traversion: from the max key to the max min.
 You will be able to change direction in the future versions of the library.
 
 ```js
 var result = test.reduce(callback [, initialValue]);
 ```
 
-- **callback**: Function executed on each node ot the tre. Returns new value of accumulator for the next node. It has following arguments:
+- **callback**: Function to execute on each node ot the tree. Returns new value of accumulator for the next node. It has following arguments:
     - *accumulator*: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
     - *value*: Value of the current node.
     - *key*:   Key of the current node.
@@ -201,7 +201,7 @@ var product = tree.reduceRight(function(accumulator, value, key, tree) {
 ###.map()###
 
 Creates new tree based on values returned by invokation of provided function for each node.
-Direction of tree traversion: from min key to max max.
+Direction of tree traversion: from the min key to the max max.
 You will be able to change direction in the future versions of the library.
 
 ```js
