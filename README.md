@@ -39,8 +39,8 @@ var tree = new BinarySearchTree(function(key1, key2) {
 });
 
 // Setting data
-tree.set('key1', 'data1');
-tree.set('key2', 'data2');
+tree.set('key1', 'data1')
+    .set('key2', 'data2');
 
 // Retrieving data
 var value2 = tree.get('key1');
@@ -51,15 +51,11 @@ if (tree.has('key2')) {
 }
 
 // Removing data from binary search tree
-var removedData = tree.remove('key1');
+var wasDeleted = tree.delete('key1');
 
-try {
-  tree.remove('absent key');
-}
-catch (error) {
-    // You cannot remove data with absent key
-    console.log(error);
-}
+tree.forEach(function(value, key) {
+    // do something with tree values
+});
 ```
 
 #API#
