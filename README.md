@@ -191,10 +191,10 @@ You will be able to change direction in the future versions of the library.
 var result = test.every(callback);
 ```
 
-- **callback**: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
+- `callback`: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
 
 **Returns** `true` if all nodes pass the test. Otherwise - `false`
 
@@ -216,10 +216,10 @@ You will be able to change direction in the future versions of the library.
 var result = test.some(callback);
 ```
 
-- **callback**: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
+- `callback**: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
 
 **Returns** `true` if at least one of nodes passes the test. Otherwise - `false`
 
@@ -239,12 +239,12 @@ You will be able to change direction in the future versions of the library.
 var result = test.reduce(callback [, initialValue]);
 ```
 
-- **callback**: Function executed on each node ot the tree. Returns new accumulator value for the next invokation. It has following arguments:
-    - *accumulator*: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
-- **initialValue** (Optional): Value to use as first argument of the first `callback` invokation. 
+- `callback`: Function executed on each node ot the tree. Returns new accumulator value for the next invokation. It has following arguments:
+    - `accumulator`: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
+- `initialValue` (Optional): Value to use as first argument of the first `callback` invokation. 
 
 **Returns** value returned by the last invokation of the `callback`.
 
@@ -264,12 +264,12 @@ You will be able to change direction in the future versions of the library.
 var result = test.reduce(callback [, initialValue]);
 ```
 
-- **callback**: Function to execute on each node ot the tree. Returns new value of accumulator for the next node. It has following arguments:
-    - *accumulator*: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
-- **initialValue** (Optional): Value to use as first argument of the first `callback` invokation. 
+- `callback`: Function to execute on each node ot the tree. Returns new value of accumulator for the next node. It has following arguments:
+    - `accumulator`: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
+- `initialValue` (Optional): Value to use as first argument of the first `callback` invokation. 
 
 **Returns** value returned by the last invokation of the `callback`.
 
@@ -290,10 +290,10 @@ You will be able to change direction in the future versions of the library.
 var newTree = test.map(callback);
 ```
 
-- **callback**: Function executed on each node ot the tre. Returns value for node of the new tree. It has following arguments:
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
+- `callback`: Function executed on each node ot the tre. Returns value for node of the new tree. It has following arguments:
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
 
 **Returns** new tree based on values returned by invokations of the `callback`
 
@@ -314,10 +314,10 @@ You will be able to change direction in the future versions of the library.
 var newTree = test.filter(callback);
 ```
 
-- **callback**: Function to test each node of the tree. If it returns `true` (or value that can be interpreted as `true` than this node will be kept. It has following arguments:
-    - *value*: Value of the current node.
-    - *key*:   Key of the current node.
-    - *tree*:  Tree is being processed.
+- `callback`: Function to test each node of the tree. If it returns `true` (or value that can be interpreted as `true` than this node will be kept. It has following arguments:
+    - `value`: Value of the current node.
+    - `key`:   Key of the current node.
+    - `tree`:  Tree is being processed.
 
 **Returns** new tree with all values passed the test implemented by `callback`
 
