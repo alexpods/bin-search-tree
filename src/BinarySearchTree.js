@@ -112,7 +112,7 @@ BinarySearchTree.prototype.get = function(key) {
     var result = this._search(key);
 
     if (!result[0]) {
-        throw new Error('Could not get value. Value with key "' + key + '" does not exist in binary search tree!');
+        return;
     }
 
     return result[1].v;
@@ -137,11 +137,11 @@ BinarySearchTree.prototype.has = function(key) {
  *
  * @throws {Error} if value for specified key does not exists
  */
-BinarySearchTree.prototype.remove = function(key) {
+BinarySearchTree.prototype.delete = function(key) {
     var result = this._search(key);
 
     if (!result[0]) {
-        throw new Error('Could not remove value. Value with key "' + key + '" does not exist in binary search tree');
+        return false;
     }
     var node = result[1];
 
@@ -153,7 +153,7 @@ BinarySearchTree.prototype.remove = function(key) {
     }
     this._length--;
 
-    return node.v;
+    return true;
 };
 
 /**

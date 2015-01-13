@@ -31,10 +31,7 @@ describe('BinarySearchTree', function() {
         for (var prop in dict) {
             expect(tree.get(prop)).to.be.equal(dict[prop]);
         }
-    });
-
-    it('should throw an error if value does not exist for specified key', function() {
-        expect(function() { tree.get('absent_key') }).to.throw(Error);
+        expect(tree.get('absent_key')).to.be.equal(undefined);
     });
 
     it('should check if specified value for specified key exists', function() {
@@ -45,20 +42,18 @@ describe('BinarySearchTree', function() {
         expect(tree.has('absent_key')).to.be.false;
     });
 
-    it('should remove value by its key', function() {
+    it('should delete value by its key', function() {
         expect(tree.has('key2')).to.be.equal(true);
-        expect(tree.remove('key2')).to.be.equal(dict['key2']);
+        expect(tree.delete('key2')).to.be.equal(true);
         var length = 0;
         for (var prop in dict) {
             length++;
             expect(tree.has(prop)).to.be.equal(prop !== 'key2');
         }
         expect(tree.length).to.be.equal(length-1);
+        expect(tree.delete('absent_key')).to.be.equal(false);
     });
 
-    it('should throw an error if value does not exist for specified key', function() {
-        expect(function() { tree.remove('absent_key') }).to.throw(Error);
-    });
 
     it('should gets value with minimal key of the tree', function() {
         expect(tree.min).to.be.equal(dict[1234]);
@@ -78,7 +73,7 @@ describe('BinarySearchTree', function() {
         expect(tree2.length).to.be.equal(1);
 
         expect(tree.length).to.be.equal(6);
-        tree.remove('key2');
+        tree.delete('key2');
         expect(tree.length).to.be.equal(5);
     });
 
