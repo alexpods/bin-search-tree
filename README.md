@@ -76,7 +76,7 @@ tree.forEach(function(value, key) {
     - [.filter()](#filter)
 
 - [Iterators (ES6 support)](#iterators-es6-support)
-    - [Symbol.iterator](#symbol-iterator)
+    - [Symbol.iterator](#symboliterator)
     - [.keys()](#keys)
     - [.values()](#values)
     - [.entries()](#entries)
