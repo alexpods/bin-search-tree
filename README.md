@@ -75,6 +75,12 @@ tree.forEach(function(value, key) {
     - [.map()](#map)
     - [.filter()](#filter)
 
+- [Iterators (ES6 support)](#iterators-es6-support)
+    - [Symbol.iterator](#symbols-iterator)
+    - [.keys()](#keys)
+    - [.values()](#values)
+    - [.entries()](#entries)
+
 ##Common (Map methods)##
 
 ###.get()###
@@ -321,4 +327,78 @@ var newTree = test.filter(callback);
 var negativeTree = tree.map(function(value, key, tree) {
     return value < 0;
 });
+```
+
+
+
+##Iterators (ES6 support)##
+
+All methods bellow returns iterators conforming to [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol#The_.22iterator.22_protocol)
+
+###[Sybmol.iterator]()###
+
+Realizes iterator interfaces for binary search tree.
+Makes possible to use tree in `for of` loop.
+Creates values iterator (see [.values()](#values) method bellow).
+
+```js
+var valuesIterator = tree[Symbol.iterator]();
+```
+
+**Returns** Iterator for binary search tree values.
+
+```js
+for (let value of tree) {
+    console.log(value);
+}
+```
+
+###.keys()###
+
+Creates iterator for binary search tree keys.
+
+```js
+var keysIterator = tree.keys();
+```
+
+**Returns** Iterator for binary search tree keys.
+
+```js
+for (let key of tree.keys()) {
+    console.log(key);
+}
+```
+
+
+###.values()###
+
+Creates iterator for binary search tree keys.
+
+```js
+var valuesIterator = tree.values();
+```
+
+**Returns** Iterator for binary search tree values.
+
+```js
+for (let value of tree.values()) {
+    console.log(value);
+}
+```
+
+
+###.entries()###
+
+Creates iterator for binary search tree key/value pairs.
+
+```js
+var entriesIterator = tree.entries();
+```
+
+**Returns** Iterator for binary search tree key/values paris.
+
+```js
+for (let [key, value] of tree.entries()) {
+    console.log(key, value);
+}
 ```
