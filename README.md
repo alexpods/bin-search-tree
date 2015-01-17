@@ -212,7 +212,7 @@ You will be able to change direction in the future versions of the library.
 var result = test.some(callback);
 ```
 
-- `callback**: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
+- `callback`: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
     - `value`: Value of the current node.
     - `key`:   Key of the current node.
     - `tree`:  Tree is being processed.
