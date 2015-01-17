@@ -1,6 +1,6 @@
-"use strict";
-
 module.exports = BinarySearchTree;
+
+var Iterator = require('./Iterator');
 
 function BinarySearchTree(options) {
     options = options || {};
@@ -283,9 +283,9 @@ BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
     var tree = this;
     var res  = initialValue;
 
-    this._traverse(function(node) {
+    this._traverse({ reverse: true }, function(node) {
         res = callback(res, node.v, node.k, tree);
-    }, true);
+    });
 
     return res;
 };
@@ -311,7 +311,7 @@ BinarySearchTree.prototype.map = function(callback) {
 };
 
 /**
- * Funtional .filter() method.
+ * Functional .filter() method.
  * Wrapper around ._traverse() method.
  *
  * @param callback Function that will be executed once per each element of binary search tree.
@@ -355,6 +355,45 @@ BinarySearchTree.prototype.filter = function(callback) {
 
     return newTree;
 };
+
+/**
+ * Iterator interface.
+ * Support for "for of" loop.
+ *
+ * @yelds Value of node tree.
+ */
+BinarySearchTree.prototype[Symbol.iterator] = function() {
+    return this.values();
+};
+
+/**
+ * Creates iterator for node values.
+ *
+ * @returns {BinarySearchTreeIterator} Iterator for node values.
+ */
+BinarySearchTree.prototype.values = function() {
+    return new Iterator(this, 'v');
+};
+
+/**
+ * Creates iterator for node keys.
+ *
+ * @return {BinarySearchTreeIterator} Iterator for node keys.
+ */
+BinarySearchTree.prototype.keys = function() {
+    return new Iterator(this, 'k');
+};
+
+/**
+ * Creates iterator for node key/value pairs.
+ *
+ * @returns {BinarySearchTreeIterator} Iterator for node key/value paris.
+ */
+BinarySearchTree.prototype.entries = function() {
+    return new Iterator(this, 'e');
+}
+
+
 
 /**
  * @TODO: Refactor logic with dirs
@@ -484,19 +523,26 @@ BinarySearchTree.prototype._produce = function(callback) {
     return tree;
 };
 
-BinarySearchTree.prototype._traverse = function(callback, ro) {
+BinarySearchTree.prototype._traverse = function(params, callback) {
     var p;
 
-    ro = ro || false; // Reverse Order of traversing
+    if (typeof params === 'function') {
+        callback = params;
+        params   = {};
+    }
 
-    var node = this._root;
+    var ro   = params.reverse || false; // Reverse Order of traversing
+    var node = params.from    || this._root;
+    var stps = params.steps   || Infinity;
+
     var dirs = '';
 
-    var up = false; // traversing is in UP state
-    var im = false; // traversing is In the Middle state
+    var up = params._up || false; // traversing is in UP state
+    var im = params._im || false; // traversing is In the Middle state
+    var ff = params._ff || false; // returns full form if callback does not exists
 
 
-    while (node) {
+    while (stps && node) {
 
         if (!up) {
             // pre
@@ -521,10 +567,18 @@ BinarySearchTree.prototype._traverse = function(callback, ro) {
         }
 
         if (!up || im) {
-            if ('break' === callback(node, dirs)) {
-                return;
+            if (node !== params.from) {
+                --stps;
+                if (callback) {
+                    if ('break' === callback(node, dirs)) {
+                        return;
+                    }
+                    dirs = '';
+                }
+                else if (0 === stps) {
+                    return ff ? [node, dirs, up, im] : null;
+                }
             }
-            dirs = '';
 
             if (ro ? node.l : node.r) {
                 if (ro) {
@@ -550,6 +604,10 @@ BinarySearchTree.prototype._traverse = function(callback, ro) {
             dirs += node === p.r  ? 'R' : 'L';
         }
         node = p;
+    }
+
+    if (!callback) {
+        return null;
     }
 };
 
@@ -749,31 +807,3 @@ BinarySearchTree.prototype._getMaxNode = function(root) {
 
     return node;
 };
-
-    var o={};
-    var children = ['b' /* some known properties of o */]
-
-    children.forEach(function(child) {
-        var childValue = {};
-        Object.defineProperty(o, 'b', {
-            get: function() { return childValue; },
-            set: function(newValue) {
-                func();
-
-                Object.keys(newValue).forEach(function(key) {
-                    var value = newValue[key];
-                    Object.defineProperty(childValue, key, {
-                        get: function() { return value },
-                        set: function(newValue) {
-                            func();
-                            value = newValue;
-                        }
-                    })
-                });
-            }
-        });
-    });
-    function func()
-    {
-        console.log(o)
-    }

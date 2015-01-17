@@ -1,5 +1,5 @@
 var Benchmark = require('benchmark');
-var BinarySearchTree = require('../src/BinarySearchTree');
+var BinarySearchTree = require('../src/Tree');
 
 var hash = {};
 var dict = Object.create(null);

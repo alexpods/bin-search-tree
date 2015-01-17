@@ -7,7 +7,7 @@
     "url": "git://github.com/alexpods/node-bin-search-tree.git"
   },
   "homepage": "https://github.com/alexpods/node-bin-search-tree",
-  "main": "src/BinarySearchTree.js",
+  "main": "src/Tree.js",
   "keywords": [
     "binary search tree",
     "binary tree",
