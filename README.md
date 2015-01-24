@@ -72,8 +72,6 @@ tree.forEach(function(value, key) {
     - [.some()](#some)
     - [.reduce()](#reduce)
     - [.reduceRight()](#reduceright)
-    - [.map()](#map)
-    - [.filter()](#filter)
 
 - [Iterators (ES6 support)](#iterators-es6-support)
     - [Symbol.iterator](#symboliterator)
@@ -278,54 +276,6 @@ var result = test.reduce(callback [, initialValue]);
 ```js
 var product = tree.reduceRight(function(accumulator, value, key, tree) {
     return accumulator*value;
-});
-```
-
-
-###.map()###
-
-Creates new tree based on values returned by invokation of provided function for each node.
-Direction of tree traversion: from the min key to the max max.
-You will be able to change direction in the future versions of the library.
-
-```js
-var newTree = test.map(callback);
-```
-
-- `callback`: Function executed on each node ot the tre. Returns value for node of the new tree. It has following arguments:
-    - `value`: Value of the current node.
-    - `key`:   Key of the current node.
-    - `tree`:  Tree is being processed.
-
-**Returns** new tree based on values returned by invokations of the `callback`
-
-```js
-var doubleValueTree = tree.map(function(value, key, tree) {
-    return value*2;
-});
-```
-
-
-###.filter()###
-
-Creates new tree with all values passed the test implemented by provided function.
-Direction of tree traversion: from min key to max max.
-You will be able to change direction in the future versions of the library.
-
-```js
-var newTree = test.filter(callback);
-```
-
-- `callback`: Function to test each node of the tree. If it returns `true` (or value that can be interpreted as `true` than this node will be kept. It has following arguments:
-    - `value`: Value of the current node.
-    - `key`:   Key of the current node.
-    - `tree`:  Tree is being processed.
-
-**Returns** new tree with all values passed the test implemented by `callback`
-
-```js
-var negativeTree = tree.map(function(value, key, tree) {
-    return value < 0;
 });
 ```
 
