@@ -3,7 +3,7 @@ Binary search tree (under development)
 
 #Overview#
 
-This package is base fast realization of **binary search tree**. Saying "base" I mean it not contains any balancing logic. There are different balancing algorithms such as ***AVL tree***, ***Red-Black tree***, ***Splay tree*** and so on... You can implement your own realization of balanced binary search tree based on this package or use one of the next ready modules:
+This package is base high-performance realization of **binary search tree**. Saying "base" I mean it not contains any balancing logic. There are different balancing algorithms such as ***AVL tree***, ***Red-Black tree***, ***Splay tree*** and so on... You can implement your own realization of balanced binary search tree based on this package or use one of the next ready modules:
 
 * [Red-Black Tree](https://github.com/alexpods/node-red-black-tree) *(currently in development)*
 * [AVL Tree](https://github.com/alexpods/node-avl-tree) *(currently in development)*
@@ -32,30 +32,68 @@ This will installl latest `bin-search-tree` package and add it to `dependencies`
 ```js
 var BinarySearchTree = require('bin-search-tree');
 
-// Creation of binary search tree
-var tree = new BinarySearchTree(function(key1, key2) {
-    // Some key comparison logic
-    return key1 < key2;
+
+/* Creation of binary search tree */
+
+// Using default key comparison logic (key1 < key2):
+var tree1 = new BinarySearchTree(); 
+// Some custom comparison logic with boolean value as result:
+var tree2 = new BinarySearchTree(function(key1, key2) { return key1 < key2 });
+// Some custom comparison logic with number value as resul:
+var tree3 = new BinarySearchTree(function(key1, key2) { 
+    return ((key1 < key2) && -1) || ((key1 > key2) && 1) || 0;
 });
 
-// Setting data
-tree.set('key1', 'data1')
-    .set('key2', 'data2');
 
-// Retrieving data
-var value2 = tree.get('key1');
+/* Setting data to tree */
 
-// Checking key on existance
-if (tree.has('key2')) {
-   // do something
-}
+// Keys can be enithing
+tree.set('key1', 'value1').set('key2', 'value2'); // string keys
+tree.set(1234,   'value1').set(2345,   'value2'); // number keys
+tree.set({a:10}, 'value1').set({b:20}, 'value2'); // object keys
+tree.set([1,2],  'value1').set({c:40}, 'value2'); // mixing keys with different types
 
-// Removing data from binary search tree
-var wasDeleted = tree.delete('key1');
 
-tree.forEach(function(value, key) {
-    // do something with tree values
-});
+/* Getting data from tree */
+
+// Returns value if such exists for specified key, or `undefined` otherwise
+var value1 = tree.get('key1');
+var value2 = tree.get('key2');
+var value3 = tree.get({a:10});
+var value4 = tree.get(123);
+
+
+/* Checkint data existance by key */
+
+if (tree.has('key2')) { /* data exists */ } else { /* data does not exists */ }
+if (tree.has(123))    { /* data exists */ } else { /* data does not exists */ }
+if (tree.has([3,4])   { /* data exists */ } else { /* data does not exists */ }
+
+
+/* Removing data from binary search tree */
+
+// Returns `true` if value was successfully deleted, or `false` otherwise
+var isDeleted = tree.delete('key1');
+var isDeleted = tree.delete(123);
+var isDeleted = tree.delete([1,2]);
+
+/* Tree traversal: functional array methods */
+
+tree.forEach(function(value, key, tree) { console.log(value, key) });
+var hasSomeValue = tree.some(function(value, key, tree)   { return value === 10 });
+var hasAllValues = tree.every(function(value, key, tree)  { return value === 'hello' });
+var sumAllValues = tree.reduce(function(prev, value, key, tree) { return prev + value }, 0);
+var difFromLast  = tree.reduceRight(function(prev, value, key, tree) { 
+    return prev == null ?  value : prev - value;
+}),
+
+
+/* Tree traversal: Iterators (ES6 support) */
+
+for (let value of tree) { console.log(value) }
+for (let value of tree.values()) { console.log(value) }
+for (let key   of tree.keys())   { console.log(key)   }
+for (let [key, value] of tree.entries()) { console.log(key, value) }
 ```
 
 #API#
