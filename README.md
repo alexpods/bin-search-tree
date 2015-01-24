@@ -29,7 +29,6 @@ This will installl latest `bin-search-tree` package and add it to `dependencies`
 ```js
 var BinarySearchTree = require('bin-search-tree');
 
-
 /* Creation of binary search tree */
 
 // Using default key comparison logic (key1 < key2):
@@ -41,7 +40,6 @@ var tree3 = new BinarySearchTree(function(key1, key2) {
     return ((key1 < key2) && -1) || ((key1 > key2) && 1) || 0;
 });
 
-
 /* Setting data to tree */
 
 // Keys can be enithing
@@ -49,7 +47,6 @@ tree.set('key1', 'value1').set('key2', 'value2'); // string keys
 tree.set(1234,   'value1').set(2345,   'value2'); // number keys
 tree.set({a:10}, 'value1').set({b:20}, 'value2'); // object keys
 tree.set([1,2],  'value1').set({c:40}, 'value2'); // mixing keys with different types
-
 
 /* Getting data from tree */
 
@@ -59,13 +56,11 @@ var value2 = tree.get('key2');
 var value3 = tree.get({a:10});
 var value4 = tree.get(123);
 
-
 /* Checkint data existance by key */
 
 if (tree.has('key2')) { /* data exists */ } else { /* data does not exists */ }
 if (tree.has(123))    { /* data exists */ } else { /* data does not exists */ }
 if (tree.has([3,4])   { /* data exists */ } else { /* data does not exists */ }
-
 
 /* Removing data from binary search tree */
 
@@ -83,7 +78,6 @@ var sumAllValues = tree.reduce(function(prev, value, key, tree) { return prev + 
 var difFromLast  = tree.reduceRight(function(prev, value, key, tree) { 
     return prev == null ?  value : prev - value;
 }),
-
 
 /* Tree traversal: Iterators (ES6 support) */
 
