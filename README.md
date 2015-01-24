@@ -1,6 +1,3 @@
-Binary search tree (under development)
-======================================
-
 #Overview#
 
 This package is base high-performance realization of **binary search tree**. Saying "base" I mean it not contains any balancing logic. There are different balancing algorithms such as ***AVL tree***, ***Red-Black tree***, ***Splay tree*** and so on... You can implement your own realization of balanced binary search tree based on this package or use one of the next ready modules:
