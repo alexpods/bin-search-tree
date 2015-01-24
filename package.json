@@ -1,6 +1,6 @@
 {
   "name": "bin-search-tree",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Binary search tree",
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "sweet.js": "^0.7.3"
   },
   "scripts": {
-    "test":  "mocha tests",
+    "test": "mocha tests",
     "build": "gulp build"
   }
 }
