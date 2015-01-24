@@ -1,5 +1,5 @@
-var BinarySearchTree = require('../src/Tree');
-var Iterator = require('../src/Iterator');
+var BinarySearchTree = require('../dist/Tree');
+var Iterator = require('../dist/Iterator');
 var expect   = require('chai').expect;
 
 describe('binary search tree iterator', function() {

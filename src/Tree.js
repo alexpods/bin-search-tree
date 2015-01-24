@@ -171,7 +171,6 @@ BinarySearchTree.prototype.clone = function() {
 
 /**
  * Functional .forEach() method.
- * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -180,16 +179,17 @@ BinarySearchTree.prototype.clone = function() {
  *                    * three The binary search tree forEach was called upon.
  */
 BinarySearchTree.prototype.forEach = function(callback) {
-    var tree = this;
+    if (this._min === null) {
+        return;
+    }
 
-    return this._traverse(function(node) {
-        callback(node.v, node.k, tree);
+    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
+        callback(node.v, node.k, this);
     });
 };
 
 /**
  * Functional .every() method.
- * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -198,23 +198,22 @@ BinarySearchTree.prototype.forEach = function(callback) {
  *                    * three The binary search tree forEach was called upon.
  */
 BinarySearchTree.prototype.every = function(callback) {
-    var tree = this;
-    var res  = true;
+    if (this._min === null) {
+        return true;
+    }
 
-    this._traverse(function(node) {
-        if (!callback(node.v, node.k, tree)) {
-            res  = false;
-            return 'break';
+    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
+        if (!callback(node.v, node.k, this)) {
+            return false;
         }
     });
 
-    return res;
+    return true;
 };
 
 
 /**
  * Functional .some() method.
- * Wrapper around ._traverse() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -223,22 +222,21 @@ BinarySearchTree.prototype.every = function(callback) {
  *                    * three The binary search tree forEach was called upon.
  */
 BinarySearchTree.prototype.some = function(callback) {
-    var tree = this;
-    var res  = false;
+    if (this._min === null) {
+        return true;
+    }
 
-    this._traverse(function(node) {
-        if (callback(node.v, node.k, tree)) {
-            res  = true;
-            return 'break';
+    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
+        if (callback(node.v, node.k, this)) {
+            return true;
         }
     });
 
-    return res;
+    return false;
 };
 
 /**
- * Funtional .reduce() method.
- * Wrapper around ._traverse() method.
+ * Functional .reduce() method.
  *
  * @param callback Function that is executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -253,19 +251,20 @@ BinarySearchTree.prototype.some = function(callback) {
  * @returns Value return by last callback invocation.
  */
 BinarySearchTree.prototype.reduce = function(callback, initialValue) {
-    var tree = this;
-    var res  = initialValue;
+    if (this._min === null) {
+        return initialValue;
+    }
+    var result = initialValue;
 
-    this._traverse(function(node) {
-        res = callback(res, node.v, node.k, tree);
+    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
+        result = callback(result, node.v, node.k, this);
     });
 
-    return res;
+    return result;
 };
 
 /**
- * Funtioanl .reduceRight() method.
- * Wrapper around ._traverse() method.
+ * Functional .reduceRight() method.
  *
  * @param callback Function that will be executed once per each element of binary search tree.
  *                 Function has three arguments:
@@ -280,14 +279,16 @@ BinarySearchTree.prototype.reduce = function(callback, initialValue) {
  * @returns Value return by last callback invocation.
  */
 BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
-    var tree = this;
-    var res  = initialValue;
+    if (this._max === null) {
+        return initialValue;
+    }
+    var result = initialValue;
 
-    this._traverse({ reverse: true }, function(node) {
-        res = callback(res, node.v, node.k, tree);
+    TRAVERSE_IN_ORDER_RIGHT(this._max, 50, (node) => {
+        result = callback(result, node.v, node.k, this);
     });
 
-    return res;
+    return result;
 };
 
 /**
@@ -410,11 +411,20 @@ BinarySearchTree.prototype._produce = function(callback) {
     var stack = [];
     var ndirs = [];
     var length = 0;
+    var min = null;
+    var max = null;
 
     this._traverse(function(node, dirs) {
         ++length;
 
         var newn  = callback(node);
+
+        if (node === tree._min) {
+            min = newn;
+        }
+        if (node === tree._max) {
+            max = newn;
+        }
 
         if (!root && !node.p) {
             root = newn;
@@ -518,6 +528,8 @@ BinarySearchTree.prototype._produce = function(callback) {
 
     tree = tree.clone();
     tree._root   = root;
+    tree._min    = min;
+    tree._max    = max;
     tree._length = length;
 
     return tree;
@@ -716,6 +728,13 @@ BinarySearchTree.prototype._removeNode = function(node) {
     var parent = node.p;
     var right  = node.l;
     var left   = node.r;
+
+    if (node === this._min) {
+        this._min = node.r ? this._getMinNode(node.r) : node.p;
+    }
+    if (node === this._max) {
+        this._max = node.l ? this._getMaxNode(node.l) : node.p;
+    }
 
     var plType = parent && (parent.l === node ? 'left' : 'right'); // parent link type
 
