@@ -4,16 +4,17 @@
   "description": "Binary search tree",
   "repository": {
     "type": "git",
-    "url": "git://github.com/alexpods/node-bin-search-tree.git"
+    "url": "git://github.com/alexpods/bin-search-tree.git"
   },
-  "homepage": "https://github.com/alexpods/node-bin-search-tree",
+  "homepage": "https://github.com/alexpods/bin-search-tree",
   "main": "dist/Tree.js",
   "keywords": [
     "binary search tree",
     "binary tree",
-    "data structure",
-    "tree",
+    "binary",
     "search",
+    "tree",
+    "data structure",
     "structure",
     "bst",
     "bin search tree",
@@ -26,7 +27,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexpods/node-bin-search-tree/issues"
+    "url": "https://github.com/alexpods/bin-search-tree/issues"
   },
   "devDependencies": {
     "benchmark": "^1.0.0",
@@ -41,7 +42,7 @@
     "sweet.js": "^0.7.3"
   },
   "scripts": {
-    "test": "mocha tests",
+    "test":  "mocha tests",
     "build": "gulp build"
   }
 }
