@@ -71,10 +71,18 @@ var isDeleted = tree.delete([1,2]);
 
 /* Tree traversal: functional array methods */
 
-tree.forEach(function(value, key, tree) { console.log(value, key) });
-var hasSomeValue = tree.some(function(value, key, tree)   { return value === 10 });
-var hasAllValues = tree.every(function(value, key, tree)  { return value === 'hello' });
-var sumAllValues = tree.reduce(function(prev, value, key, tree) { return prev + value }, 0);
+tree.forEach(function(value, key, tree) { 
+    console.log(value, key) 
+});
+var hasSomeValue = tree.some(function(value, key, tree)   { 
+    return value === 10;
+});
+var hasAllValues = tree.every(function(value, key, tree)  { 
+    return value === 'hello';
+});
+var sumAllValues = tree.reduce(function(prev, value, key, tree) { 
+    return prev + value;
+}, 0);
 var difFromLast  = tree.reduceRight(function(prev, value, key, tree) { 
     return prev == null ?  value : prev - value;
 }),
