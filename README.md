@@ -335,7 +335,7 @@ var negativeTree = tree.map(function(value, key, tree) {
 
 All methods bellow returns iterators conforming to [ES6 iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol#The_.22iterator.22_protocol)
 
-###Sybmol.iterator###
+###Symbol.iterator###
 
 Realizes iterator interfaces for binary search tree.
 Makes it possible to use the tree in `for of` loop.
