@@ -1,9 +1,12 @@
 module.exports = BinarySearchTreeIterator;
 
+var IteratorResult = require('./IteratorResult');
+
 /**
  * Binary search tree iterator
  *
  * @param tree Binary Search tree
+ * @param type Type of iteration result
  * @constructor
  */
 function BinarySearchTreeIterator(tree, type) {
@@ -13,11 +16,9 @@ function BinarySearchTreeIterator(tree, type) {
         throw new Error('Incorrect binary search tree iterator type "' + type + '"!');
     }
 
-    this._tree = tree;
     this._type = type;
+    this._tree = tree;
     this._last = null;
-    this._up   = false;
-    this._im   = false;
     this._done = false;
 }
 
@@ -30,49 +31,70 @@ function BinarySearchTreeIterator(tree, type) {
  */
 BinarySearchTreeIterator.prototype.next = function() {
     if (this._done) {
-        return new BinarySearchTreeIteratorResult(undefined, true);
+        return new IteratorResult(undefined, true);
     }
 
-    var tree = this._tree;
     var node = this._last;
+    var type = this._type;
 
-    var res = tree._traverse({ from: node, steps: 1, _ff: true, _up: this._up, _im: this._im });
+    if (!node) {
+        if (!this._tree.min) {
+            this._done = true;
+            return new IteratorResult(undefined, true);
+        }
 
-    if (!res) {
-        this._done = true;
-        return new BinarySearchTreeIteratorResult(undefined, true);
+        this._last = node = this._tree._min;
+        switch (type) {
+            case 'k': return new IteratorResult(node['k'], false);
+            case 'v': return new IteratorResult(node['v'], false);
+            case 'e': return new IteratorResult([node['k'], node['v']], false);
+        }
     }
 
-    this._last = node = res[0];
-    this._up   = res[2];
-    this._im   = res[3];
+    if (node['r']) {
+        node = node['r'];
 
-    var t = this._type;
+        while (node['l']) {
+            node = node['l'];
+        }
 
-    return new BinarySearchTreeIteratorResult(
-        (t === 'v' && node.v) || (t === 'k' && node.k) || (t === 'e' && [node.k, node.v]),
-        false
-    );
+        this._last = node;
+        switch (type) {
+            case 'k': return new IteratorResult(node['k'], false);
+            case 'v': return new IteratorResult(node['v'], false);
+            case 'e': return new IteratorResult([node['k'], node['v']], false);
+        }
+    }
+
+    if (!node['p']) {
+        this._done = true;
+        return new IteratorResult(undefined, true);
+    }
+
+    while (node['p']['l'] !== node) {
+        node = node['p'];
+
+        if (!node['p']) {
+            this._done = true;
+            return new IteratorResult(undefined, true);
+        }
+    }
+
+    this._last = node = node['p'];
+    switch (type) {
+        case 'k': return new IteratorResult(node['k'], false);
+        case 'v': return new IteratorResult(node['v'], false);
+        case 'e': return new IteratorResult([node['k'], node['v']], false);
+    }
 };
 
-/**
-* Iterator must return itself as its iterator
-*
-* @returns this iterator
-*/
-BinarySearchTreeIterator.prototype[Symbol.iterator] = function() {
-    return this;
-};
-
-
-/**
- * Result of binary search tree iteration
- *
- * @param value
- * @param done
- * @constructor
- */
-function BinarySearchTreeIteratorResult(value, done) {
-    this.value = value;
-    this.done  = done;
+if (Symbol) {
+    /**
+     * Iterator must return itself as its iterator
+     *
+     * @returns this iterator
+     */
+    BinarySearchTreeIterator.prototype[Symbol.iterator] = function() {
+        return this;
+    };
 }
