@@ -33,8 +33,10 @@ var BinarySearchTree = require('bin-search-tree');
 
 // Using default key comparison logic (key1 < key2):
 var tree1 = new BinarySearchTree(); 
+
 // Some custom comparison logic with boolean value as result:
 var tree2 = new BinarySearchTree(function(key1, key2) { return key1 < key2 });
+
 // Some custom comparison logic with number value as resul:
 var tree3 = new BinarySearchTree(function(key1, key2) { 
     return ((key1 < key2) && -1) || ((key1 > key2) && 1) || 0;
@@ -298,7 +300,7 @@ Direction of tree traversion: from the max key to the max min.
 You will be able to change direction in the future versions of the library.
 
 ```js
-var result = test.reduce(callback [, initialValue]);
+var result = test.reduceRight(callback [, initialValue]);
 ```
 
 - `callback`: Function to execute on each node ot the tree. Returns new value of accumulator for the next node. It has following arguments:
