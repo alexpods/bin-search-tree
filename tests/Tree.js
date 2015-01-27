@@ -328,4 +328,21 @@ describe('binary search tree', function() {
         expect(keys.length).to.be.equal(i+1);
     });
 
+    it('should supports traversing in "post" order', function() {
+        var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
+        var res  = [0, 2, 4, 3, 1, 8, 9, 7, 6, 5];
+        var tree = new BinarySearchTree();
+
+        keys.forEach(function(value) { tree.set(value) });
+
+        var i = 0;
+        tree.forEach('pre', function(val, key) {
+            ++i;
+            expect(key).to.be.equal(res[i]);
+            extect(val).to.be.equal(undefined);
+        });
+
+        expect(keys.length).to.be.equal(i+1);
+    });
+
 });
