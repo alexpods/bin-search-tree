@@ -22,9 +22,9 @@ describe('binary search tree', function() {
     beforeEach(function() {
         tree = new BinarySearchTree();
 
-        for (var prop in dict) {
+        Object.keys(dict).forEach(function(prop) {
             tree.set(prop, dict[prop]);
-        }
+        });
     });
 
     it('should gets value from tree by key', function() {
@@ -309,6 +309,23 @@ describe('binary search tree', function() {
             }');
             expect(keys.length).to.be.equal(i);
         }
+    });
+
+    it('should supports traversing in "pre" order', function() {
+        var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
+        var res  = [5, 1, 0, 3, 2, 4, 6, 7, 8, 9];
+        var tree = new BinarySearchTree();
+
+        keys.forEach(function(value) { tree.set(value) });
+
+        var i = 0;
+        tree.forEach('pre', function(val, key) {
+            ++i;
+            expect(key).to.be.equal(res[i]);
+            extect(val).to.be.equal(undefined);
+        });
+
+        expect(keys.length).to.be.equal(i+1);
     });
 
 });
