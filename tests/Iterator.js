@@ -33,11 +33,14 @@ describe('binary search tree iterator', function() {
 
 
         iterator = new Iterator(tree);
-        i = 0;
-        for (var value of iterator) {
-            expect(value).to.be.equal(tree.get(keys[i++]));
-        }
 
-        expect(i).to.be.equal(tree.length);
+        if (global.Symbol) {
+            i = 0;
+            eval('for (var value of iterator) { \
+                expect(value).to.be.equal(tree.get(keys[i++])); \
+            }');
+
+            expect(i).to.be.equal(tree.length);
+        }
     });
 });

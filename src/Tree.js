@@ -292,15 +292,17 @@ BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
 };
 
 
-/**
- * Iterator interface.
- * Support for "for of" loop.
- *
- * @yelds Value of node tree.
- */
-BinarySearchTree.prototype[Symbol.iterator] = function() {
-    return this.values();
-};
+if (global.Symbol) {
+    /**
+     * Iterator interface.
+     * Support for "for of" loop.
+     *
+     * @yelds Value of node tree.
+     */
+    BinarySearchTree.prototype[Symbol.iterator] = function() {
+        return this.values();
+    };
+}
 
 /**
  * Creates iterator for node values.

@@ -22,6 +22,19 @@ function BinarySearchTreeIterator(tree, type) {
     this._done = false;
 }
 
+
+
+if (global.Symbol) {
+    /**
+     * Iterator must return itself as its iterator
+     *
+     * @returns this iterator
+     */
+    BinarySearchTreeIterator.prototype[Symbol.iterator] = function() {
+        return this;
+    };
+}
+
 /**
  * Iterates to the next node and returns its value.
  *
@@ -87,14 +100,3 @@ BinarySearchTreeIterator.prototype.next = function() {
         case 'e': return new IteratorResult([node['k'], node['v']], false);
     }
 };
-
-if (Symbol) {
-    /**
-     * Iterator must return itself as its iterator
-     *
-     * @returns this iterator
-     */
-    BinarySearchTreeIterator.prototype[Symbol.iterator] = function() {
-        return this;
-    };
-}

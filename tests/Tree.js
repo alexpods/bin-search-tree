@@ -254,56 +254,61 @@ describe('binary search tree', function() {
     });
 
     it('should implements iterator interface', function() {
-        var i, keys = Object.keys(dict);
+        var keys = Object.keys(dict);
         keys.sort();
 
-        i = 0;
-        for (var value of tree) {
-            expect(value).to.be.equal(dict[keys[i++]]);
+        if (global.Symbol) {
+            var i = 0;
+            eval('for (var value of tree) { \
+                expect(value).to.be.equal(dict[keys[i++]]); \
+            }');
+            expect(keys.length).to.be.equal(i);
         }
-        expect(keys.length).to.be.equal(i);
     });
 
     it('should implements values() iterator', function() {
         var valuesIterator = tree.values();
         var keys   = Object.keys(dict);
 
-        var i = 0;
-        keys.sort();
-        for (var value of valuesIterator) {
-            expect(value).to.be.equal(dict[keys[i++]]);
+        if (global.Symbol) {
+            var i = 0;
+            keys.sort();
+            eval('for (var value of valuesIterator) { \
+                expect(value).to.be.equal(dict[keys[i++]]); \
+            }');
+            expect(keys.length).to.be.equal(i);
         }
-
-        expect(keys.length).to.be.equal(i);
     });
 
     it('should implements keys() iterator', function() {
         var keysIterator = tree.keys();
         var keys   = Object.keys(dict);
 
-        var i = 0;
-        keys.sort();
-        for (var key of keysIterator) {
-            expect(key).to.be.equal(keys[i++]);
+        if (global.Symbol) {
+            var i = 0;
+            keys.sort();
+            eval('for (var key of keysIterator) { \
+                expect(key).to.be.equal(keys[i++]); \
+            }');
+            expect(keys.length).to.be.equal(i);
         }
-
-        expect(keys.length).to.be.equal(i);
     });
 
     it('should implements entries() iterator', function() {
         var entriesIterator = tree.entries();
         var keys   = Object.keys(dict);
 
-        var i = 0;
-        keys.sort();
-        for (var entry of entriesIterator) {
-            expect(entry.length).to.be.equal(2);
-            expect(entry[0]).to.be.equal(keys[i]);
-            expect(entry[1]).to.be.equal(dict[keys[i]]);
-            ++i;
+        if (global.Symbol) {
+            var i = 0;
+            keys.sort();
+            eval('for (var entry of entriesIterator) { \
+                expect(entry.length).to.be.equal(2); \
+                expect(entry[0]).to.be.equal(keys[i]); \
+                expect(entry[1]).to.be.equal(dict[keys[i]]); \
+                ++i; \
+            }');
+            expect(keys.length).to.be.equal(i);
         }
-
-        expect(keys.length).to.be.equal(i);
     });
 
 });
