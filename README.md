@@ -73,21 +73,29 @@ var isDeleted = tree.delete([1,2]);
 
 /* Tree traversal: functional array methods */
 
-tree.forEach(function(value, key, tree) { 
-    console.log(value, key) 
-});
-var hasSomeValue = tree.some(function(value, key, tree)   { 
-    return value === 10;
-});
-var hasAllValues = tree.every(function(value, key, tree)  { 
-    return value === 'hello';
-});
-var sumAllValues = tree.reduce(function(prev, value, key, tree) { 
-    return prev + value;
-}, 0);
-var difFromLast  = tree.reduceRight(function(prev, value, key, tree) { 
-    return prev == null ?  value : prev - value;
-}),
+// By default "in order" from left traversing type
+tree.forEach(function(value, key, tree) { console.log(value, key) });
+
+// "pre-order" from right traversing type
+tree.forEach('pre:right', function(value, key, tree) { console.log(value, key) });
+
+// "in-order" from left traversing type (default type)
+tree.forEach('in:left', function(value, key, tree) { console.log(value, key) });
+
+// "post-order" from right traversing type
+tree.forEach('post:right', function(value, key, tree) { console.log(value, key) });
+
+// "level-order" from left traversing type
+tree.forEach('level', function(value, key, tree) { console.log(value, key) });
+
+// array-like 'some()' method with "in-order" from right traversing type
+var hasSomeValue = tree.some('in:right', function(value, key, tree)   { return value === 10 });
+
+// array-like 'every()' method with "level-order" from left traversing type
+var hasAllValues = tree.every('level:left', function(value, key, tree)  { return value === 'hello' });
+
+// array-like 'reduce()' method with "pre-order" form left traversing type
+var sumAllValues = tree.reduce('pre:left', function(prev, value, key, tree) { return prev + value }, 0);
 
 /* Tree traversal: Iterators (ES6 support) */
 
@@ -204,9 +212,18 @@ Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
-tree.forEach(callback);
+tree.forEach([travType,] callback);
 ```
 
+- `travType`: Traversing type. Possible values:
+    - *"In-order"* left traversing: `"in"`, `"in:l"`, `"in:left"`.
+    - *"In-order"* right traversing: `"in:r"`, `"in:right"`.
+    - *"Pre-order"* left traversing: `"pre"`, `"pre:l"`, `"pre:left"`.
+    - *"Pre-order"* right traversing: `"pre:r"`, `"pre:right"`.
+    - *"Post-order"* left traversing: `"post"`, `"post:l"`, `"post:left"`.
+    - *"Post-order"* right traversing: `"post:r"`, `"post:right"`.
+    - *"Level-order"* left traversing: `"level"`, `"level:l"`, `"level:left"`.
+    - *"Level-order"* right traversing: `"level:r"`, `"level:right"`.
 - `callback`: Function to execute once per each node of the tree. It has following arguments:
     - `value`: Value of the current node.
     - `key`:   Key of the current node.
@@ -227,9 +244,18 @@ Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
-var result = test.every(callback);
+var result = test.every([travType,] callback);
 ```
 
+- `travType`: Traversing type. Possible values:
+    - *"In-order"* left traversing: `"in"`, `"in:l"`, `"in:left"`.
+    - *"In-order"* right traversing: `"in:r"`, `"in:right"`.
+    - *"Pre-order"* left traversing: `"pre"`, `"pre:l"`, `"pre:left"`.
+    - *"Pre-order"* right traversing: `"pre:r"`, `"pre:right"`.
+    - *"Post-order"* left traversing: `"post"`, `"post:l"`, `"post:left"`.
+    - *"Post-order"* right traversing: `"post:r"`, `"post:right"`.
+    - *"Level-order"* left traversing: `"level"`, `"level:l"`, `"level:left"`.
+    - *"Level-order"* right traversing: `"level:r"`, `"level:right"`.
 - `callback`: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
     - `value`: Value of the current node.
     - `key`:   Key of the current node.
@@ -252,9 +278,18 @@ Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
-var result = test.some(callback);
+var result = test.some([travType,] callback);
 ```
 
+- `travType`: Traversing type. Possible values:
+    - *"In-order"* left traversing: `"in"`, `"in:l"`, `"in:left"`.
+    - *"In-order"* right traversing: `"in:r"`, `"in:right"`.
+    - *"Pre-order"* left traversing: `"pre"`, `"pre:l"`, `"pre:left"`.
+    - *"Pre-order"* right traversing: `"pre:r"`, `"pre:right"`.
+    - *"Post-order"* left traversing: `"post"`, `"post:l"`, `"post:left"`.
+    - *"Post-order"* right traversing: `"post:r"`, `"post:right"`.
+    - *"Level-order"* left traversing: `"level"`, `"level:l"`, `"level:left"`.
+    - *"Level-order"* right traversing: `"level:r"`, `"level:right"`.
 - `callback`: Function to test each node of the tree. Node passes the test if this function returns `true` value (or value that can be interpreted as `true`). Otherwise node failes, and traversing is interrupted. It has following arguments:
     - `value`: Value of the current node.
     - `key`:   Key of the current node.
@@ -275,9 +310,18 @@ Direction of tree traversion: from the min key to the max key.
 You will be able to change direction in the future versions of the library.
 
 ```js
-var result = test.reduce(callback [, initialValue]);
+var result = test.reduce([travType,] callback [, initialValue]);
 ```
 
+- `travType`: Traversing type. Possible values:
+    - *"In-order"* left traversing: `"in"`, `"in:l"`, `"in:left"`.
+    - *"In-order"* right traversing: `"in:r"`, `"in:right"`.
+    - *"Pre-order"* left traversing: `"pre"`, `"pre:l"`, `"pre:left"`.
+    - *"Pre-order"* right traversing: `"pre:r"`, `"pre:right"`.
+    - *"Post-order"* left traversing: `"post"`, `"post:l"`, `"post:left"`.
+    - *"Post-order"* right traversing: `"post:r"`, `"post:right"`.
+    - *"Level-order"* left traversing: `"level"`, `"level:l"`, `"level:left"`.
+    - *"Level-order"* right traversing: `"level:r"`, `"level:right"`.
 - `callback`: Function executed on each node ot the tree. Returns new accumulator value for the next invokation. It has following arguments:
     - `accumulator`: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
     - `value`: Value of the current node.
@@ -292,32 +336,6 @@ var sum = tree.reduce(function(accumulator, value, key, tree) {
     return accumulator + value;
 });
 ```
-
-###.reduceRight()###
-
-Applies provided function against accumulator and each node of the tree.
-Direction of tree traversion: from the max key to the max min.
-You will be able to change direction in the future versions of the library.
-
-```js
-var result = test.reduceRight(callback [, initialValue]);
-```
-
-- `callback`: Function to execute on each node ot the tree. Returns new value of accumulator for the next node. It has following arguments:
-    - `accumulator`: Value previously returned by last invokation of the `callback` or `initialValue` if this is first `calback` invokation. 
-    - `value`: Value of the current node.
-    - `key`:   Key of the current node.
-    - `tree`:  Tree is being processed.
-- `initialValue` (Optional): Value to use as first argument of the first `callback` invokation. 
-
-**Returns** value returned by the last invokation of the `callback`.
-
-```js
-var product = tree.reduceRight(function(accumulator, value, key, tree) {
-    return accumulator*value;
-});
-```
-
 
 
 ##Iterators (ES6 support)##
