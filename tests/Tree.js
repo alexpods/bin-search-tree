@@ -1,4 +1,4 @@
-var BinarySearchTree = require('../dist/Tree');
+var BinarySearchTree = require('../src/Tree');
 var expect           = require('chai').expect;
 
 describe('binary search tree', function() {
@@ -219,40 +219,6 @@ describe('binary search tree', function() {
         expect(resultValues).to.be.deep.equal(dictValues);
     });
 
-    it('should have array-like .reduceRight() method', function() {
-        var dictKeys    = Object.keys(dict);
-        var visitedKeys = [];
-
-        var resultRight = tree.reduceRight(function(previousValue, currentValue, key, traversingTree) {
-            visitedKeys.push(key);
-
-            expect(currentValue).to.be.equal(dict[key]);
-            expect(traversingTree).to.be.equal(tree);
-
-            return typeof previousValue === 'undefined' ? currentValue : previousValue + ',' + currentValue;
-        });
-
-        dictKeys.sort();
-        visitedKeys.sort();
-
-        expect(visitedKeys).to.be.deep.equal(dictKeys);
-
-        var result = tree.reduce(function(previousValue, currentValue, key, traversingTree) {
-            visitedKeys.push(key);
-
-            expect(currentValue).to.be.equal(dict[key]);
-            expect(traversingTree).to.be.equal(tree);
-
-            return typeof previousValue === 'undefined' ? currentValue : previousValue + ',' + currentValue;
-        });
-
-        var resultRightValues = resultRight.split(',');
-        var resultValues      = result.split(',');
-
-        expect(resultRightValues).to.be.deep.equal(resultValues.reverse());
-
-    });
-
     it('should implements iterator interface', function() {
         var keys = Object.keys(dict);
         keys.sort();
@@ -312,37 +278,283 @@ describe('binary search tree', function() {
     });
 
     it('should supports traversing in "pre" order', function() {
-        var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
-        var res  = [5, 1, 0, 3, 2, 4, 6, 7, 8, 9];
-        var tree = new BinarySearchTree();
+        var methods = ['forEach', 'every', 'some', 'reduce'];
 
+        var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
+        var res  = [5, 1, 0, 3, 2, 4, 6, 7, 9, 8];
+        var resR = [5, 6, 7, 9, 8, 1, 3, 4, 2, 0];
+
+        var tree = new BinarySearchTree();
         keys.forEach(function(value) { tree.set(value) });
 
-        var i = 0;
-        tree.forEach('pre', function(val, key) {
-            ++i;
-            expect(key).to.be.equal(res[i]);
-            extect(val).to.be.equal(undefined);
-        });
+        methods.forEach(function(method) {
 
-        expect(keys.length).to.be.equal(i+1);
+            var i;
+
+            i = 0;
+            tree[method]('pre', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('pre:l', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('pre:left', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('pre:r', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            i = 0;
+            tree[method]('pre:right', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+        });
     });
 
     it('should supports traversing in "post" order', function() {
+        var methods = ['forEach', 'every', 'some', 'reduce'];
+
         var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
         var res  = [0, 2, 4, 3, 1, 8, 9, 7, 6, 5];
-        var tree = new BinarySearchTree();
+        var resR = [8, 9, 7, 6, 4, 2, 3, 0, 1, 5];
 
+        var tree = new BinarySearchTree();
         keys.forEach(function(value) { tree.set(value) });
 
-        var i = 0;
-        tree.forEach('pre', function(val, key) {
-            ++i;
-            expect(key).to.be.equal(res[i]);
-            extect(val).to.be.equal(undefined);
-        });
+        methods.forEach(function(method) {
+            var i;
 
-        expect(keys.length).to.be.equal(i+1);
+            i = 0;
+            tree[method]('post', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('post:l', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('post:left', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('post:r', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            i = 0;
+            tree[method]('post:right', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+        });
+    });
+
+    it('should supports traversing in "level" order', function() {
+        var methods = ['forEach', 'every', 'some', 'reduce'];
+
+        var keys = [5, 1, 6, 7, 3, 4, 9, 2, 8, 0];
+        var res  = [5, 1, 6, 0, 3, 7, 2, 4, 9, 8];
+        var resR = [5, 6, 1, 7, 3, 0, 9, 4, 2, 8];
+
+        var tree = new BinarySearchTree();
+        keys.forEach(function(value) { tree.set(value) });
+
+        methods.forEach(function(method) {
+            var i;
+
+            i = 0;
+            tree[method]('level', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('level:l', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('level:left', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(res[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+
+            i = 0;
+            tree[method]('level:r', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            i = 0;
+            tree[method]('level:right', function(val, key) {
+                if (method === 'reduce') {
+                    val = arguments[1];
+                    key = arguments[2];
+                }
+
+                expect(key).to.be.equal(resR[i]);
+                expect(val).to.be.equal(undefined);
+                ++i;
+
+                return method !== 'some';
+            });
+
+            expect(keys.length).to.be.equal(i);
+        });
     });
 
 });

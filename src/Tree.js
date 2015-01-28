@@ -1,6 +1,16 @@
 module.exports = BinarySearchTree;
 
 var Iterator = require('./Iterator');
+var traverse = require('./traverse');
+
+var preOrderLeft   = traverse.preOrderLeft;
+var preOrderRight  = traverse.preOrderRight;
+var inOrderLeft    = traverse.inOrderLeft;
+var inOrderRight   = traverse.inOrderRight;
+var postOrderLeft  = traverse.postOrderLeft;
+var postOrderRight = traverse.postOrderRight;
+var levelOrderLeft  = traverse.levelOrderLeft;
+var levelOrderRight = traverse.levelOrderRight;
 
 function BinarySearchTree(options) {
     options = options || {};
@@ -178,14 +188,61 @@ BinarySearchTree.prototype.clone = function() {
  *                    * key   The key of current element being processed in tree.
  *                    * three The binary search tree forEach was called upon.
  */
-BinarySearchTree.prototype.forEach = function(callback) {
-    if (this._min === null) {
+BinarySearchTree.prototype.forEach = function(type, callback) {
+    if (this._root === null) {
         return;
     }
 
-    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
-        callback(node.v, node.k, this);
-    });
+    if (typeof type === 'function') {
+        callback = type;
+        type     = 'in';
+    }
+
+    var tree = this;
+
+    var cb = function(node) { callback(node.v, node.k, tree); };
+
+    switch (type) {
+        case 'in':
+        case 'in:l':
+        case 'in:left':
+            return inOrderLeft(this._root,     cb);
+
+
+        case 'in:r':
+        case 'in:right':
+            return inOrderRight(this._root,    cb);
+
+        case 'pre':
+        case 'pre:l':
+        case 'pre:left':
+            return preOrderLeft(this._root,    cb);
+
+        case 'pre:r':
+        case 'pre:right':
+            return preOrderRight(this._root,   cb);
+
+        case 'post':
+        case 'post:l':
+        case 'post:left':
+            return postOrderLeft(this._root,   cb);
+
+        case 'post:r':
+        case 'post:right':
+            return postOrderRight(this._root,  cb);
+
+        case 'level':
+        case 'level:l':
+        case 'level:left':
+            return levelOrderLeft(this._root,  cb);
+
+        case 'level:r':
+        case 'level:right':
+            return levelOrderRight(this._root, cb);
+
+        default:
+            throw new Error('Incorrect traverse type "' + type + '"!');
+    }
 };
 
 /**
@@ -197,16 +254,82 @@ BinarySearchTree.prototype.forEach = function(callback) {
  *                    * key   The key of current element being processed in tree.
  *                    * three The binary search tree forEach was called upon.
  */
-BinarySearchTree.prototype.every = function(callback) {
-    if (this._min === null) {
+BinarySearchTree.prototype.every = function(type, callback) {
+    if (this._root === null) {
         return true;
     }
 
-    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
-        if (!callback(node.v, node.k, this)) {
+    if (typeof type === 'function') {
+        callback = type;
+        type     = 'in';
+    }
+
+    var tree = this;
+
+    var cb = function(node) {
+        if (!callback(node.v, node.k, tree)) {
+            throw 'break';
+        }
+    };
+
+    try {
+        switch (type) {
+            case 'in':
+            case 'in:l':
+            case 'in:left':
+                inOrderLeft(this._root, cb);
+                break;
+
+
+            case 'in:r':
+            case 'in:right':
+                inOrderRight(this._root, cb);
+                break;
+
+            case 'pre':
+            case 'pre:l':
+            case 'pre:left':
+                preOrderLeft(this._root, cb);
+                break;
+
+            case 'pre:r':
+            case 'pre:right':
+                preOrderRight(this._root, cb);
+                break;
+
+            case 'post':
+            case 'post:l':
+            case 'post:left':
+                postOrderLeft(this._root, cb);
+                break;
+
+            case 'post:r':
+            case 'post:right':
+                postOrderRight(this._root, cb);
+                break;
+
+            case 'level':
+            case 'level:l':
+            case 'level:left':
+                levelOrderLeft(this._root, cb);
+                break;
+
+            case 'level:r':
+            case 'level:right':
+                levelOrderRight(this._root, cb);
+                break;
+
+            default:
+                throw new Error('Incorrect traverse type "' + type + '"!');
+        }
+    } catch (e) {
+        if (e === 'break') {
             return false;
         }
-    });
+        else {
+            throw e;
+        }
+    }
 
     return true;
 };
@@ -221,16 +344,82 @@ BinarySearchTree.prototype.every = function(callback) {
  *                    * key   The key of current element being processed in tree.
  *                    * three The binary search tree forEach was called upon.
  */
-BinarySearchTree.prototype.some = function(callback) {
-    if (this._min === null) {
+BinarySearchTree.prototype.some = function(type, callback) {
+    if (this._root === null) {
         return true;
     }
 
-    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
-        if (callback(node.v, node.k, this)) {
+    if (typeof type === 'function') {
+        callback = type;
+        type     = 'in';
+    }
+
+    var tree = this;
+
+    var cb = function(node) {
+        if (callback(node.v, node.k, tree)) {
+            throw 'break';
+        }
+    };
+
+    try {
+        switch (type) {
+            case 'in':
+            case 'in:l':
+            case 'in:left':
+                inOrderLeft(this._root, cb);
+                break;
+
+
+            case 'in:r':
+            case 'in:right':
+                inOrderRight(this._root, cb);
+                break;
+
+            case 'pre':
+            case 'pre:l':
+            case 'pre:left':
+                preOrderLeft(this._root, cb);
+                break;
+
+            case 'pre:r':
+            case 'pre:right':
+                preOrderRight(this._root, cb);
+                break;
+
+            case 'post':
+            case 'post:l':
+            case 'post:left':
+                postOrderLeft(this._root, cb);
+                break;
+
+            case 'post:r':
+            case 'post:right':
+                postOrderRight(this._root, cb);
+                break;
+
+            case 'level':
+            case 'level:l':
+            case 'level:left':
+                levelOrderLeft(this._root, cb);
+                break;
+
+            case 'level:r':
+            case 'level:right':
+                levelOrderRight(this._root, cb);
+                break;
+
+            default:
+                throw new Error('Incorrect traverse type "' + type + '"!');
+        }
+    } catch (e) {
+        if (e === 'break') {
             return true;
         }
-    });
+        else {
+            throw e;
+        }
+    }
 
     return false;
 };
@@ -250,43 +439,73 @@ BinarySearchTree.prototype.some = function(callback) {
  *
  * @returns Value return by last callback invocation.
  */
-BinarySearchTree.prototype.reduce = function(callback, initialValue) {
-    if (this._min === null) {
-        return initialValue;
+BinarySearchTree.prototype.reduce = function(type, callback, initialValue) {
+    if (this._root === null) {
+        return true;
     }
+
+    if (typeof type === 'function') {
+        initialValue = callback;
+        callback     = type;
+        type         = 'in';
+    }
+
+    var tree = this;
     var result = initialValue;
 
-    TRAVERSE_IN_ORDER_LEFT(this._min, 50, (node) => {
-        result = callback(result, node.v, node.k, this);
-    });
+    var cb = function(node) {
+        result = callback(result, node.v, node.k, tree)
+    };
 
-    return result;
-};
+    switch (type) {
+        case 'in':
+        case 'in:l':
+        case 'in:left':
+            inOrderLeft(this._root, cb);
+            break;
 
-/**
- * Functional .reduceRight() method.
- *
- * @param callback Function that will be executed once per each element of binary search tree.
- *                 Function has three arguments:
- *                    * previousValue The value previously returned in the last invocation of the callback,
- *                                    or initialValue, if supplied
- *                    * currentValue  The value of current element being processed in tree.
- *                    * key           The key of current element being processed in tree.
- *                    * three          The binary search tree forEach was called upon.
- *
- * @param [initialValue] Object to use as the first argument to the first call of the callback.
- *
- * @returns Value return by last callback invocation.
- */
-BinarySearchTree.prototype.reduceRight = function(callback, initialValue) {
-    if (this._max === null) {
-        return initialValue;
+
+        case 'in:r':
+        case 'in:right':
+            inOrderRight(this._root, cb);
+            break;
+
+        case 'pre':
+        case 'pre:l':
+        case 'pre:left':
+            preOrderLeft(this._root, cb);
+            break;
+
+        case 'pre:r':
+        case 'pre:right':
+            preOrderRight(this._root, cb);
+            break;
+
+        case 'post':
+        case 'post:l':
+        case 'post:left':
+            postOrderLeft(this._root, cb);
+            break;
+
+        case 'post:r':
+        case 'post:right':
+            postOrderRight(this._root, cb);
+            break;
+
+        case 'level':
+        case 'level:l':
+        case 'level:left':
+            levelOrderLeft(this._root, cb);
+            break;
+
+        case 'level:r':
+        case 'level:right':
+            levelOrderRight(this._root, cb);
+            break;
+
+        default:
+            throw new Error('Incorrect traverse type "' + type + '"!');
     }
-    var result = initialValue;
-
-    TRAVERSE_IN_ORDER_RIGHT(this._max, 50, (node) => {
-        result = callback(result, node.v, node.k, this);
-    });
 
     return result;
 };
